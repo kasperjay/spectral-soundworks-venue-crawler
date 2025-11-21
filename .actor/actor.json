@@ -1,0 +1,13 @@
+{
+  "actorSpecification": 1,
+  "name": "austin-venues-scraper",
+  "title": "Austin Venues Scraper",
+  "description": "Scrapes events from 10 Austin venues, including JS-rendered Mohawk using Playwright.",
+  "version": "1.0.0",
+  "dockerfile": "./Dockerfile",
+  "input": "./INPUT_SCHEMA.json",
+  "readme": "./README.md",
+  "meta": {
+    "templateId": "js-generic"
+  }
+}
