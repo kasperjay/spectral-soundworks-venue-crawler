@@ -120,12 +120,15 @@ Actor.main(async () => {
         comeAndTakeItEvent: async ({ page, request }) => {
             const sourceUrl = request.loadedUrl || request.url;
 
-            const { lineup, fullDate } = await page.evaluate(() => {
+            const { lineup, fullDate, headingTitle } = await page.evaluate(() => {
                 const text = document.body.innerText || '';
                 const allLines = text
                     .split('\n')
                     .map((t) => t.trim())
                     .filter(Boolean);
+
+                const heading = document.querySelector('h1, .entry-title');
+                const headingTitle = heading?.textContent?.trim() || null;
 
                 let eventDateFull = null;
                 for (const line of allLines) {
@@ -139,6 +142,8 @@ Actor.main(async () => {
                     /Come and Take It Productions presents/i.test(line),
                 );
 
+                const stopPattern = /^(tickets|event details|details|venue info|time:|doors|show:|ages|admission|onsale)/i;
+
                 const lineupLines = [];
                 if (startIndex !== -1) {
                     for (let i = startIndex + 1; i < allLines.length; i++) {
@@ -146,28 +151,56 @@ Actor.main(async () => {
                         if (!line) continue;
 
                         if (/^www\./i.test(line)) break;
-                        if (/Venue info/i.test(line)) break;
+                        if (stopPattern.test(line)) break;
+                        if (line.length > 80) break;
 
                         lineupLines.push(line);
+
+                        // Prevent walking too far down unrelated sections
+                        if (lineupLines.length >= 8) break;
                     }
                 }
 
                 return {
                     lineup: lineupLines,
                     fullDate: eventDateFull,
+                    headingTitle,
                 };
             });
 
-            const cleanedLineup = Array.from(
-                new Set(
-                    (lineup || []).map((name) =>
-                        name.replace(/\s+/g, ' ').trim(),
-                    ),
-                ),
-            ).filter(Boolean);
+            const normalizeName = (name) => name.replace(/\s+/g, ' ').replace(/^[–-]\s*/, '').trim();
 
-            const headliner = cleanedLineup[0] || null;
-            const supportingActs = cleanedLineup.slice(1);
+            const candidateNames = [];
+            for (const rawLine of lineup || []) {
+                let line = normalizeName(rawLine);
+                if (!line) continue;
+
+                if (/^(with)\s+/i.test(line)) {
+                    line = line.replace(/^with\s+/i, '');
+                }
+
+                const parts = line
+                    .split(/,| & | and |\+/i)
+                    .map((p) => normalizeName(p))
+                    .filter(Boolean);
+
+                for (const part of parts) {
+                    const wordCount = part.split(/\s+/).length;
+                    if (wordCount > 8) continue;
+                    if (/^(tickets|event details|details|venue info|time:|doors|show:|ages|admission)/i.test(part)) continue;
+                    if (/[0-9]:[0-9]{2}\s*(am|pm)/i.test(part)) continue;
+                    candidateNames.push(part);
+                }
+            }
+
+            const uniqueNames = Array.from(new Set(candidateNames));
+
+            let headliner = uniqueNames[0] || null;
+            const supportingActs = uniqueNames.slice(1);
+
+            if (!headliner && headingTitle) {
+                headliner = headingTitle.replace(/Come and Take It Productions presents:?\s*/i, '').trim();
+            }
 
             return [
                 {
@@ -177,6 +210,125 @@ Actor.main(async () => {
                     sourceUrl,
                 },
             ];
+        },
+
+        // ------------------------------------------------------------
+        // Continental Club Austin – calendar page entries with times
+        // ------------------------------------------------------------
+        continentalClubAustin: async ({ page, request }) => {
+            const sourceUrl = request.loadedUrl || request.url;
+
+            const rows = await page.$$eval('.timely-event', (nodes) => {
+                // Step 1: collect raw events with date + time + artist
+                const rawEvents = [];
+                let unknownDateCounter = 0;
+
+                function parseTimeToMinutes(timeStr) {
+                    if (!timeStr) return null;
+
+                    const s = timeStr.trim().toLowerCase();
+                    // Handles "9:30pm", "6:00 am", "10pm"
+                    const m = s.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i);
+                    if (!m) return null;
+
+                    let hour = parseInt(m[1], 10);
+                    const minutes = m[2] ? parseInt(m[2], 10) : 0;
+                    const meridiem = m[3];
+
+                    if (meridiem === 'pm' && hour !== 12) hour += 12;
+                    if (meridiem === 'am' && hour === 12) hour = 0;
+
+                    return hour * 60 + minutes;
+                }
+
+                nodes.forEach((node, domIndex) => {
+                    const titleSpan = node.querySelector('.timely-event-title-text');
+                    if (!titleSpan) return;
+
+                    // Time text, e.g. "2:30pm"
+                    const timeEl = titleSpan.querySelector('.timely-event-time');
+                    const timeText = timeEl ? timeEl.textContent || '' : '';
+
+                    // Clone to safely remove time and get just the artist
+                    const clone = titleSpan.cloneNode(true);
+                    const cloneTimeEl = clone.querySelector('.timely-event-time');
+                    if (cloneTimeEl) cloneTimeEl.remove();
+
+                    const artistName = (clone.textContent || '').trim();
+                    if (!artistName) return;
+
+                    // Date from aria-label: "2:30pm - 11:59pm, Marshall Hood, no location, 2 November 2025"
+                    let eventDateRaw = null;
+                    const aria = node.getAttribute('aria-label') || '';
+                    if (aria) {
+                        const parts = aria.split(',').map((p) => p.trim()).filter(Boolean);
+                        if (parts.length) {
+                            const last = parts[parts.length - 1];
+                            if (/\d{4}$/.test(last)) {
+                                eventDateRaw = last; // "2 November 2025"
+                            }
+                        }
+                    }
+
+                    const minutes = parseTimeToMinutes(timeText);
+
+                    rawEvents.push({
+                        eventDateRaw,
+                        artistName,
+                        minutes,
+                        domIndex,
+                        groupKey: eventDateRaw || `unknown-${unknownDateCounter++}`,
+                    });
+                });
+
+                // Step 2: group by date and assign roles
+                const byDate = new Map();
+
+                for (const ev of rawEvents) {
+                    const key = ev.groupKey;
+                    if (!byDate.has(key)) byDate.set(key, []);
+                    byDate.get(key).push(ev);
+                }
+
+                const rowsInner = [];
+
+                for (const [dateKey, eventsOnDate] of byDate.entries()) {
+                    if (!eventsOnDate.length) continue;
+
+                    // Sort by start time; nulls treated as very early
+                    eventsOnDate.sort((a, b) => {
+                        const ma = a.minutes;
+                        const mb = b.minutes;
+
+                        if (ma == null && mb == null) {
+                            return a.domIndex - b.domIndex;
+                        }
+
+                        if (ma == null) return -1;
+                        if (mb == null) return 1;
+
+                        return ma - mb;
+                    });
+
+                    const headlinerEvent = eventsOnDate[eventsOnDate.length - 1];
+
+                    for (const ev of eventsOnDate) {
+                        rowsInner.push({
+                            eventDateRaw: ev.eventDateRaw,
+                            artistName: ev.artistName,
+                            role: ev === headlinerEvent ? 'headliner' : 'support',
+                        });
+                    }
+                }
+
+                return rowsInner;
+            });
+
+            // Attach sourceUrl back in Node context
+            return (rows || []).map((row) => ({
+                ...row,
+                sourceUrl,
+            }));
         },
 
         // ------------------------------------------------------------
