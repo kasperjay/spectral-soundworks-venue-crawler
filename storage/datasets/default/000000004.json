@@ -1,9 +1,9 @@
 {
-	"venueId": "emosAustin",
-	"venueParserId": "emosAustin",
-	"sourceUrl": "https://www.ticketmaster.com/the-faint-austin-texas-11-23-2025/event/3A0062D8FB025B00",
+	"venueId": "scootInn",
+	"venueParserId": "scootInn",
+	"sourceUrl": "https://www.ticketmaster.com/leif-vollebekk-revelation-tour-austin-texas-11-21-2025/event/3A0062F7C76D49ED",
 	"eventDateRaw": null,
-	"scrapedAt": "2025-11-22T08:30:53.247Z",
+	"scrapedAt": "2025-11-22T08:55:46.230Z",
 	"role": "headliner",
-	"artistName": "The Faint"
+	"artistName": "Leif Vollebekk"
 }

@@ -1,9 +1,9 @@
 {
-	"venueId": "scootInn",
-	"venueParserId": "scootInn",
-	"sourceUrl": "https://www.ticketmaster.com/leif-vollebekk-revelation-tour-austin-texas-11-21-2025/event/3A0062F7C76D49ED",
+	"venueId": "emosAustin",
+	"venueParserId": "emosAustin",
+	"sourceUrl": "https://www.ticketmaster.com/say-anything-and-motion-city-soundtrack-austin-texas-11-21-2025/event/3A0062CDB24756D8",
 	"eventDateRaw": null,
-	"scrapedAt": "2025-11-22T08:30:53.175Z",
+	"scrapedAt": "2025-11-22T08:55:45.897Z",
 	"role": "headliner",
-	"artistName": "Leif Vollebekk"
+	"artistName": "Say Anything"
 }

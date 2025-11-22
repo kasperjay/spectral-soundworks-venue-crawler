@@ -17,9 +17,40 @@ Actor.main(async () => {
     }
 
     const {
-        venues = [],
+        venues = [
+            {
+                "id": "mohawkAustin",
+                "startUrl": "https://mohawkaustin.com/"
+            },
+            {
+                "id": "comeAndTakeIt",
+                "startUrl": "https://comeandtakeitproductions.com/calendar/",
+                parserId: "comeAndTakeItEvent"
+            },
+            {
+                "id": "continentalClubAustin",
+                "startUrl": "https://continentalclub.com/austin/",
+                parserId: "continentalClubEvent"
+            },
+            {
+                "id": "parishAustin",
+                "startUrl": "https://parishaustin.com/calendar/",
+                parserId: "parishAustinEvent"
+            },
+
+            {
+                "id": "empireAtAustin",
+                "startUrl": "https://empireatx.com/calendar/",
+                parserId: "empireAtAustinEvent"
+            },
+            {
+                "id": "stubbsAustin",
+                "startUrl": "https://stubbsaustin.com/concert-listings/",
+                parserId: "stubbsAustinEvent"
+            }
+        ],
         proxyConfiguration: proxyConfigInput,
-        maxConcurrency = 2,
+        maxConcurrency = 5,
     } = input;
 
     if (!venues.length) {
