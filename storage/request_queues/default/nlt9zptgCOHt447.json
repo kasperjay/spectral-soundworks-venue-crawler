@@ -1,0 +1,9 @@
+{
+	"id": "nlt9zptgCOHt447",
+	"json": "{\"id\":\"nlt9zptgCOHt447\",\"url\":\"https://www.scootinnaustin.com/shows/calendar/\",\"loadedUrl\":\"https://www.scootinnaustin.com/shows/calendar/2025-11\",\"uniqueKey\":\"https://www.scootinnaustin.com/shows/calendar\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"scootInn\",\"parserId\":\"scootInn\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-22T08:30:53.179Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://www.scootinnaustin.com/shows/calendar",
+	"url": "https://www.scootinnaustin.com/shows/calendar/"
+}

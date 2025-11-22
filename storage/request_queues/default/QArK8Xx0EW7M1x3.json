@@ -1,0 +1,9 @@
+{
+	"id": "QArK8Xx0EW7M1x3",
+	"json": "{\"id\":\"QArK8Xx0EW7M1x3\",\"url\":\"https://www.emosaustin.com/shows/calendar/\",\"loadedUrl\":\"https://www.emosaustin.com/shows/calendar/2025-11\",\"uniqueKey\":\"https://www.emosaustin.com/shows/calendar\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"emosAustin\",\"parserId\":\"emosAustin\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-22T08:30:53.248Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://www.emosaustin.com/shows/calendar",
+	"url": "https://www.emosaustin.com/shows/calendar/"
+}

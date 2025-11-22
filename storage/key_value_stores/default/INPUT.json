@@ -1,0 +1,28 @@
+{
+  "venues": [
+    {
+      "id": "emosAustin",
+      "startUrl": "https://www.emosaustin.com/shows/calendar/",
+      "parserId": "emosAustin"
+    },
+    {
+      "id": "scootInn",
+      "startUrl": "https://www.scootinnaustin.com/shows/calendar/",
+      "parserId": "scootInn"
+    },
+    {
+      "id": "antones",
+      "startUrl": "https://antonesnightclub.com/calendar/",
+      "parserId": "antones"
+    },
+    {
+      "id": "mohawkAustin",
+      "startUrl": "https://www.mohawkaustin.com/events/",
+      "parserId": "mohawkAustin"
+    }
+  ],
+  "maxConcurrency": 2,
+  "proxyConfiguration": {
+    "useApifyProxy": false
+  }
+}

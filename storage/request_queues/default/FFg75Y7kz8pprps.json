@@ -1,0 +1,9 @@
+{
+	"id": "FFg75Y7kz8pprps",
+	"json": "{\"id\":\"FFg75Y7kz8pprps\",\"url\":\"https://antonesnightclub.com/calendar/\",\"loadedUrl\":\"https://antonesnightclub.com/calendar/\",\"uniqueKey\":\"https://antonesnightclub.com/calendar\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"antones\",\"parserId\":\"antones\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-22T08:30:54.303Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://antonesnightclub.com/calendar",
+	"url": "https://antonesnightclub.com/calendar/"
+}

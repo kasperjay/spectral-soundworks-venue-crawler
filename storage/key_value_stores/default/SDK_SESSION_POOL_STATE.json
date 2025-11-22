@@ -1,0 +1,217 @@
+{
+  "usableSessionsCount": 5,
+  "retiredSessionsCount": 0,
+  "sessions": [
+    {
+      "id": "session_oXgifg8NTj",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.0",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": []
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2025-11-22T09:20:25.662Z",
+      "createdAt": "2025-11-22T08:30:25.662Z",
+      "usageCount": 0,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_3XU4CeEy7h",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.0",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": [
+          {
+            "key": "_ga_WJ45HC5QZ7",
+            "value": "GS2.1.s1763800253$o1$g0$t1763800253$j60$l0$h0",
+            "expires": "2026-12-27T08:30:53.854Z",
+            "domain": "antonesnightclub.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:54.291Z",
+            "lastAccessed": "2025-11-22T08:30:54.291Z"
+          },
+          {
+            "key": "_ga",
+            "value": "GA1.2.1549354669.1763800254",
+            "expires": "2026-12-27T08:30:53.997Z",
+            "domain": "antonesnightclub.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:54.292Z",
+            "lastAccessed": "2025-11-22T08:30:54.292Z"
+          },
+          {
+            "key": "_gid",
+            "value": "GA1.2.1164359037.1763800254",
+            "expires": "2025-11-23T08:30:53.000Z",
+            "domain": "antonesnightclub.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:54.292Z",
+            "lastAccessed": "2025-11-22T08:30:54.292Z"
+          },
+          {
+            "key": "_gat_UA-21741771-8",
+            "value": "1",
+            "expires": "2025-11-22T08:31:53.000Z",
+            "domain": "antonesnightclub.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:54.292Z",
+            "lastAccessed": "2025-11-22T08:30:54.292Z"
+          },
+          {
+            "key": "_gat_UA-83420563-51",
+            "value": "1",
+            "expires": "2025-11-22T08:31:53.000Z",
+            "domain": "antonesnightclub.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:54.292Z",
+            "lastAccessed": "2025-11-22T08:30:54.292Z"
+          },
+          {
+            "key": "_ga_2K63FTH796",
+            "value": "GS2.2.s1763800254$o1$g1$t1763800254$j60$l0$h0",
+            "expires": "2026-12-27T08:30:54.175Z",
+            "domain": "antonesnightclub.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:54.292Z",
+            "lastAccessed": "2025-11-22T08:30:54.292Z"
+          },
+          {
+            "key": "_gid",
+            "value": "GA1.2.480575486.1763800255",
+            "expires": "2025-11-23T08:30:54.000Z",
+            "domain": "mohawkaustin.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:55.268Z",
+            "lastAccessed": "2025-11-22T08:30:55.268Z"
+          },
+          {
+            "key": "_gat_gtag_UA_114683466_37",
+            "value": "1",
+            "expires": "2025-11-22T08:31:54.000Z",
+            "domain": "mohawkaustin.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:55.268Z",
+            "lastAccessed": "2025-11-22T08:30:55.268Z"
+          },
+          {
+            "key": "_ga_RHC981ED6X",
+            "value": "GS2.1.s1763800254$o1$g0$t1763800254$j60$l0$h0",
+            "expires": "2026-12-27T08:30:54.612Z",
+            "domain": "mohawkaustin.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:55.268Z",
+            "lastAccessed": "2025-11-22T08:30:55.268Z"
+          },
+          {
+            "key": "_ga",
+            "value": "GA1.1.1108676615.1763800255",
+            "expires": "2026-12-27T08:30:54.612Z",
+            "domain": "mohawkaustin.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:55.268Z",
+            "lastAccessed": "2025-11-22T08:30:55.268Z"
+          },
+          {
+            "key": "_fbp",
+            "value": "fb.1.1763800255024.424560378729040727",
+            "expires": "2026-02-20T08:30:55.000Z",
+            "domain": "mohawkaustin.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2025-11-22T08:30:55.268Z",
+            "lastAccessed": "2025-11-22T08:30:55.268Z"
+          }
+        ]
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2025-11-22T09:20:25.663Z",
+      "createdAt": "2025-11-22T08:30:25.663Z",
+      "usageCount": 4,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_ZeQOrdcsA0",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.0",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": []
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2025-11-22T09:20:25.668Z",
+      "createdAt": "2025-11-22T08:30:25.668Z",
+      "usageCount": 0,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_HEafw3h8dz",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.0",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": []
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2025-11-22T09:20:53.189Z",
+      "createdAt": "2025-11-22T08:30:53.189Z",
+      "usageCount": 0,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_oPZ1Lz44fi",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.0",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": []
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2025-11-22T09:20:53.255Z",
+      "createdAt": "2025-11-22T08:30:53.255Z",
+      "usageCount": 0,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    }
+  ]
+}
