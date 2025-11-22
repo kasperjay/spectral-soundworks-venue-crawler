@@ -1,9 +1,9 @@
 {
 	"venueId": "emosAustin",
 	"venueParserId": "emosAustin",
-	"sourceUrl": "https://www.ticketmaster.com/say-anything-and-motion-city-soundtrack-austin-texas-11-21-2025/event/3A0062CDB24756D8",
+	"sourceUrl": "https://www.ticketmaster.com/the-faint-austin-texas-11-23-2025/event/3A0062D8FB025B00",
 	"eventDateRaw": null,
-	"scrapedAt": "2025-11-22T08:55:45.897Z",
+	"scrapedAt": "2025-11-22T13:33:32.569Z",
 	"role": "headliner",
-	"artistName": "Say Anything"
+	"artistName": "The Faint"
 }

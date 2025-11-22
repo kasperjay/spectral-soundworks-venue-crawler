@@ -18,36 +18,42 @@ Actor.main(async () => {
 
     const {
         venues = [
-            {
-                "id": "mohawkAustin",
-                "startUrl": "https://mohawkaustin.com/"
-            },
-            {
-                "id": "comeAndTakeIt",
-                "startUrl": "https://comeandtakeitproductions.com/calendar/",
-                parserId: "comeAndTakeItEvent"
-            },
-            {
-                "id": "continentalClubAustin",
-                "startUrl": "https://continentalclub.com/austin/",
-                parserId: "continentalClubEvent"
-            },
-            {
-                "id": "parishAustin",
-                "startUrl": "https://parishaustin.com/calendar/",
-                parserId: "parishAustinEvent"
-            },
-
-            {
-                "id": "empireAtAustin",
-                "startUrl": "https://empireatx.com/calendar/",
-                parserId: "empireAtAustinEvent"
-            },
-            {
-                "id": "stubbsAustin",
-                "startUrl": "https://stubbsaustin.com/concert-listings/",
-                parserId: "stubbsAustinEvent"
-            }
+                {
+                    "id": "mohawkAustin",
+                    "startUrl": "https://mohawkaustin.com/"
+                },
+                {
+                    "id": "comeAndTakeIt",
+                    "startUrl": "https://comeandtakeitproductions.com/calendar/"
+                },
+                {
+                    "id": "continentalClubAustin",
+                    "startUrl": "https://continentalclub.com/austin/"
+                },
+                {
+                    "id": "parishAustin",
+                    "startUrl": "https://parishaustin.com/calendar/"
+                },
+                {
+                    "id": "empireAtAustin",
+                    "startUrl": "https://empireatx.com/calendar/"
+                },
+                {
+                    "id": "stubbsAustin",
+                    "startUrl": "https://stubbsaustin.com/concert-listings/"
+                },
+                {
+                    "id": "emosAustin",
+                    "startUrl": "https://www.emosaustin.com/shows/calendar/"
+                },
+                {
+                    "id": "scootInn",
+                    "startUrl": "https://www.scootinnaustin.com/shows/calendar"
+                },
+                {
+                    "id": "antones",
+                    "startUrl": "https://antonesnightclub.com/calendar/"
+                }
         ],
         proxyConfiguration: proxyConfigInput,
         maxConcurrency = 5,
@@ -728,10 +734,18 @@ Actor.main(async () => {
 
             if (context?.crawler && detailRequests.length > 0) {
                 await context.crawler.addRequests(detailRequests);
+                // Emit lightweight calendar summary rows in addition to queuing details.
+                return events.map(ev => ({
+                    eventDateRaw: null,
+                    headliner: ev.title,
+                    supportingActs: [],
+                    sourceUrl: ev.url,
+                }));
             }
 
-            // Calendar page itself does not emit rows; event pages will.
-            return [];
+            // If not running in crawler context, emit summary rows so callers
+            // (or tests) get immediate results.
+            return events.map(ev => ({ eventDateRaw: null, headliner: ev.title, supportingActs: [], sourceUrl: ev.url }));
         },
 
         // ------------------------------------------------------------
@@ -872,10 +886,18 @@ Actor.main(async () => {
 
             if (context?.crawler && detailRequests.length > 0) {
                 await context.crawler.addRequests(detailRequests);
+                // Emit lightweight calendar summary rows in addition to queuing details.
+                return events.map(ev => ({
+                    eventDateRaw: null,
+                    headliner: ev.title,
+                    supportingActs: [],
+                    sourceUrl: ev.url,
+                }));
             }
 
-            // Calendar page itself does not emit rows; event pages will.
-            return [];
+            // If not running in crawler context, emit summary rows so callers
+            // (or tests) get immediate results.
+            return events.map(ev => ({ eventDateRaw: null, headliner: ev.title, supportingActs: [], sourceUrl: ev.url }));
         },
 
         // ------------------------------------------------------------
@@ -1012,10 +1034,18 @@ Actor.main(async () => {
 
             if (context?.crawler && detailRequests.length > 0) {
                 await context.crawler.addRequests(detailRequests);
+                // Emit lightweight calendar summary rows in addition to queuing details.
+                return events.map(ev => ({
+                    eventDateRaw: null,
+                    headliner: ev.title || ev.url,
+                    supportingActs: [],
+                    sourceUrl: ev.url,
+                }));
             }
 
-            // Listings page itself does not emit rows; /tm-event pages will.
-            return [];
+            // Listings page itself does not emit rows when not in crawler context,
+            // but return summaries for tests and callers.
+            return events.map(ev => ({ eventDateRaw: null, headliner: ev.title || ev.url, supportingActs: [], sourceUrl: ev.url }));
         },
 
         // ------------------------------------------------------------
@@ -1295,6 +1325,18 @@ Actor.main(async () => {
 
             if (!events || !events.length) return [];
 
+            // Helper to parse the visible anchor text into a lightweight summary.
+            const parseEvent = (text) => {
+                const s = (text || '').replace(/\s+/g, ' ').replace(/Doors\s*:/i, 'Doors:').replace(/Show\s*:/i, 'Show:').trim();
+                const doorsMatch = s.match(/Doors:\s*(\d{1,2}:?\d{0,2}\s*(am|pm))/i);
+                const showMatch = s.match(/Show:\s*(\d{1,2}:?\d{0,2}\s*(am|pm))/i);
+                const doorsTime = doorsMatch ? doorsMatch[1].trim() : null;
+                const showTime = showMatch ? showMatch[1].trim() : null;
+                let titlePart = s.replace(/Doors:\s*\d{1,2}:?\d{0,2}\s*(am|pm)/i, '').replace(/Show:\s*\d{1,2}:?\d{0,2}\s*(am|pm)/i, '').trim();
+                const parts = titlePart.split(/\s+w\/?\s+|\s+with\s+|,|\s+&\s+|\s+and\s+/i).map(p => p.trim()).filter(Boolean);
+                return { headliner: parts[0]||null, supportingActs: parts.slice(1), eventDateRaw: null, doorsTime, showTime };
+            };
+
             // Queue modal/dialog detail requests if crawler context is present
             if (context?.crawler) {
                 const base = (request.loadedUrl || request.url).split('#')[0];
@@ -1313,22 +1355,14 @@ Actor.main(async () => {
                 });
 
                 if (detailReqs.length) await context.crawler.addRequests(detailReqs);
-                // Calendar itself does not emit rows; detail pages will.
-                return [];
+                // Emit lightweight summary rows in addition to queuing detail pages.
+                return events.map((ev) => {
+                    const parsed = parseEvent(ev.text);
+                    return { ...parsed, eventDateRaw: ev.calendarDate || parsed.eventDateRaw || null, sourceUrl: ev.url || sourceUrl };
+                });
             }
 
-            // If not run in crawler context, return parsed summary rows
-            const parseEvent = (text) => {
-                const s = (text || '').replace(/\s+/g, ' ').replace(/Doors\s*:/i, 'Doors:').replace(/Show\s*:/i, 'Show:').trim();
-                const doorsMatch = s.match(/Doors:\s*(\d{1,2}:?\d{0,2}\s*(am|pm))/i);
-                const showMatch = s.match(/Show:\s*(\d{1,2}:?\d{0,2}\s*(am|pm))/i);
-                const doorsTime = doorsMatch ? doorsMatch[1].trim() : null;
-                const showTime = showMatch ? showMatch[1].trim() : null;
-                let titlePart = s.replace(/Doors:\s*\d{1,2}:?\d{0,2}\s*(am|pm)/i, '').replace(/Show:\s*\d{1,2}:?\d{0,2}\s*(am|pm)/i, '').trim();
-                const parts = titlePart.split(/\s+w\/?\s+|\s+with\s+|,|\s+&\s+|\s+and\s+/i).map(p => p.trim()).filter(Boolean);
-                return { headliner: parts[0]||null, supportingActs: parts.slice(1), eventDateRaw: null, doorsTime, showTime };
-            };
-
+            // Not running in crawler context: return parsed summary rows
             return events.map((ev) => {
                 const parsed = parseEvent(ev.text);
                 return { ...parsed, eventDateRaw: ev.calendarDate || parsed.eventDateRaw || null, sourceUrl: ev.url || sourceUrl };

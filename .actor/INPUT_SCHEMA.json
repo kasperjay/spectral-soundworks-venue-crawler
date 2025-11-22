@@ -1,56 +1,56 @@
 {
-    "title": "Venue artist scraper input",
-    "description": "Scrape headliners and supporting acts from multiple venue calendars.",
-    "type": "object",
-    "schemaVersion": 1,
-    "properties": {
-      "venues": {
-        "title": "Venues",
-        "description": "List of venue configs. Each one maps to a parser in main.js.",
-        "type": "array",
-        "editor": "json",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "title": "Venue ID",
-              "type": "string",
-              "description": "Internal ID (e.g. \"mohawkAustin\"). Must match a key in venueParsers."
-            },
-            "startUrl": {
-              "title": "Start URL",
-              "type": "string",
-              "description": "Calendar or listing URL to crawl, e.g. \"https://mohawkaustin.com/\"."
-            },
-            "parserId": {
-              "title": "Parser ID (optional)",
-              "type": "string",
-              "description": "Optional override for the parser key. If omitted, main.js uses id."
-            }
-          },
-          "required": ["id", "startUrl"],
-          "additionalProperties": false
-        },
-        "minItems": 1
-      },
-  
-      "maxConcurrency": {
-        "title": "Max concurrency",
-        "type": "integer",
-        "description": "How many pages to crawl in parallel.",
-        "default": 5,
-        "minimum": 1,
-        "maximum": 50,
-        "editor": "number"
-      },
-  
-      "proxyConfiguration": {
-        "title": "Proxy configuration",
+  "title": "Venue artist scraper input",
+  "description": "Scrape headliners and supporting acts from multiple venue calendars.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "venues": {
+      "title": "Venues",
+      "description": "List of venue configs. Each one maps to a parser in main.js.",
+      "type": "array",
+      "editor": "json",
+      "items": {
         "type": "object",
-        "description": "Select proxies to be used by your crawler.",
-        "prefill": { "useApifyProxy": true },
-        "editor": "proxy"
-      }
+        "properties": {
+          "id": {
+            "title": "Venue ID",
+            "type": "string",
+            "description": "Internal ID (e.g. \"mohawkAustin\"). Must match a key in venueParsers."
+          },
+          "startUrl": {
+            "title": "Start URL",
+            "type": "string",
+            "description": "Calendar or listing URL to crawl, e.g. \"https://mohawkaustin.com/\"."
+          },
+          "parserId": {
+            "title": "Parser ID (optional)",
+            "type": "string",
+            "description": "Optional override for the parser key. If omitted, main.js uses id."
+          }
+        },
+        "required": ["id", "startUrl"],
+        "additionalProperties": false
+      },
+      "minItems": 1
     },
-    "required": ["venues"]
-  }
+
+    "maxConcurrency": {
+      "title": "Max concurrency",
+      "type": "integer",
+      "description": "How many pages to crawl in parallel.",
+      "default": 5,
+      "minimum": 1,
+      "maximum": 50,
+      "editor": "number"
+    },
+
+    "proxyConfiguration": {
+      "title": "Proxy configuration",
+      "type": "object",
+      "description": "Select proxies to be used by your crawler.",
+      "prefill": { "useApifyProxy": true },
+      "editor": "proxy"
+    }
+  },
+  "required": ["venues"]
+}
