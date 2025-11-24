@@ -1,5 +1,35 @@
 {
+  "maxConcurrency": 2,
   "venues": [
+    {
+      "id": "mohawkAustin",
+      "startUrl": "https://mohawkaustin.com/"
+    },
+    {
+      "id": "comeAndTakeIt",
+      "startUrl": "https://comeandtakeitproductions.com/calendar/",
+      "parserId": "comeAndTakeItEvent"
+    },
+    {
+      "id": "continentalClubAustin",
+      "startUrl": "https://continentalclub.com/austin/",
+      "parserId": "continentalClubAustin"
+    },
+    {
+      "id": "parishAustin",
+      "startUrl": "https://parishaustin.com/calendar/",
+      "parserId": "parishAustin"
+    },
+    {
+      "id": "empireAtAustin",
+      "startUrl": "https://empireatx.com/calendar/",
+      "parserId": "empireAtAustin"
+    },
+    {
+      "id": "stubbsAustin",
+      "startUrl": "https://stubbsaustin.com/concert-listings/",
+      "parserId": "stubbsAustin"
+    },
     {
       "id": "emosAustin",
       "startUrl": "https://www.emosaustin.com/shows/calendar/",
@@ -14,15 +44,9 @@
       "id": "antones",
       "startUrl": "https://antonesnightclub.com/calendar/",
       "parserId": "antones"
-    },
-    {
-      "id": "mohawkAustin",
-      "startUrl": "https://www.mohawkaustin.com/events/",
-      "parserId": "mohawkAustin"
     }
   ],
-  "maxConcurrency": 2,
   "proxyConfiguration": {
-    "useApifyProxy": false
+    "useApifyProxy": true
   }
 }

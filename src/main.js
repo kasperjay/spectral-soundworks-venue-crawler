@@ -24,23 +24,28 @@ Actor.main(async () => {
                 },
                 {
                     "id": "comeAndTakeIt",
-                    "startUrl": "https://comeandtakeitproductions.com/calendar/"
+                    "startUrl": "https://comeandtakeitproductions.com/calendar/",
+                    "parserId": "comeAndTakeItEvent"
                 },
                 {
                     "id": "continentalClubAustin",
-                    "startUrl": "https://continentalclub.com/austin/"
+                    "startUrl": "https://continentalclub.com/austin/",
+                    "parserId": "continentalClubEvent"
                 },
                 {
                     "id": "parishAustin",
-                    "startUrl": "https://parishaustin.com/calendar/"
+                    "startUrl": "https://parishaustin.com/calendar/",
+                    "parserId": "parishAustinEvent"
                 },
                 {
                     "id": "empireAtAustin",
-                    "startUrl": "https://empireatx.com/calendar/"
+                    "startUrl": "https://empireatx.com/calendar/",
+                    "parserId": "empireAtAustin"
                 },
                 {
                     "id": "stubbsAustin",
-                    "startUrl": "https://stubbsaustin.com/concert-listings/"
+                    "startUrl": "https://stubbsaustin.com/concert-listings/",
+                    "parserId": "stubbsAustinEvent"
                 },
                 {
                     "id": "emosAustin",
@@ -48,7 +53,7 @@ Actor.main(async () => {
                 },
                 {
                     "id": "scootInn",
-                    "startUrl": "https://www.scootinnaustin.com/shows/calendar"
+                    "startUrl": "https://www.scootinnaustin.com/shows/calendar/'"
                 },
                 {
                     "id": "antones",
@@ -64,8 +69,13 @@ Actor.main(async () => {
         return;
     }
 
-    const proxyConfiguration = await Actor.createProxyConfiguration(proxyConfigInput);
-
+    const proxyConfiguration = await Actor.createProxyConfiguration({
+        password: 'apify_proxy_mrbIBtdfDTItumA8wW5KcfaKis3wHu0LDJ4AD',
+        proxyUrls: [
+            'http://auto:apify_proxy_mrbIBtdfDTItumA8wW5KcfaKis3wHu0LDJ4AD@proxy.apify.com:8000',
+        ],
+        ...(proxyConfigInput || {}),
+    });
     // ------------------------------------------------------------------------
     // Venue-specific parsers
     // Each parser returns either:
@@ -307,6 +317,7 @@ Actor.main(async () => {
 
                         if (rows.length) {
                             // Queue detail pages for richer parsing (optional)
+                            let queuedDetails = false;
                             if (context?.crawler) {
                                 const detailReqs = [];
                                 for (const dateKey of Object.keys(items)) {
@@ -329,10 +340,16 @@ Actor.main(async () => {
                                     }
                                 }
 
-                                if (detailReqs.length) await context.crawler.addRequests(detailReqs);
+                                if (detailReqs.length) {
+                                    await context.crawler.addRequests(detailReqs);
+                                    queuedDetails = true;
+                                }
                             }
 
-                            // Emit rows found from the API directly
+                            // Avoid emitting calendar summaries when detail pages were queued
+                            if (queuedDetails) return [];
+
+                            // Emit rows found from the API directly (no detail pages queued)
                             return rows;
                         }
                     }
@@ -422,6 +439,7 @@ Actor.main(async () => {
 
                 if (timelyRows && timelyRows.length) {
                     // Queue detail pages found on the Timely page for richer parsing
+                    let queuedDetails = false;
                     if (context?.crawler) {
                         const detailReqs = [];
                         for (const it of timelyRows) {
@@ -437,7 +455,10 @@ Actor.main(async () => {
                                 });
                             }
                         }
-                        if (detailReqs.length) await context.crawler.addRequests(detailReqs);
+                        if (detailReqs.length) {
+                            await context.crawler.addRequests(detailReqs);
+                            queuedDetails = true;
+                        }
                     }
 
                     // Normalize titles into headliner + supportingActs here (split multi-act titles)
@@ -455,6 +476,8 @@ Actor.main(async () => {
                         return { eventDateRaw: r.eventDateRaw || null, headliner: parts.headliner || null, supportingActs: parts.supports, sourceUrl: r.sourceUrl || sourceUrl };
                     });
 
+                    // Avoid emitting summaries when detail pages will produce rows
+                    if (queuedDetails) return [];
                     return rowsOut;
                 }
             } catch (e) {
@@ -574,6 +597,7 @@ Actor.main(async () => {
 
             const filtered = withUrls.filter((ev) => likelyEvent(ev.url));
 
+            let queuedDetails = false;
             if (filtered.length && context?.crawler) {
                 const detailRequests = filtered.map((ev) => ({
                     url: ev.url,
@@ -585,12 +609,15 @@ Actor.main(async () => {
                     },
                 }));
 
-                if (detailRequests.length) await context.crawler.addRequests(detailRequests);
-                // Continue and also emit calendar rows below so we get both calendar summaries
-                // and detailed rows produced by event pages queued above.
+                if (detailRequests.length) {
+                    await context.crawler.addRequests(detailRequests);
+                    queuedDetails = true;
+                }
             }
 
-            // Otherwise emit calendar rows directly
+            if (queuedDetails) return [];
+
+            // Otherwise emit calendar rows directly (no detail pages queued)
             return (rows || []).flatMap((r) => {
                 if (!r.title) return [];
                 return [{ eventDateRaw: r.dateText || null, headliner: r.title, supportingActs: [], sourceUrl }];
@@ -734,13 +761,8 @@ Actor.main(async () => {
 
             if (context?.crawler && detailRequests.length > 0) {
                 await context.crawler.addRequests(detailRequests);
-                // Emit lightweight calendar summary rows in addition to queuing details.
-                return events.map(ev => ({
-                    eventDateRaw: null,
-                    headliner: ev.title,
-                    supportingActs: [],
-                    sourceUrl: ev.url,
-                }));
+                // Avoid emitting summary rows here; detail pages will produce the records.
+                return [];
             }
 
             // If not running in crawler context, emit summary rows so callers
@@ -886,13 +908,8 @@ Actor.main(async () => {
 
             if (context?.crawler && detailRequests.length > 0) {
                 await context.crawler.addRequests(detailRequests);
-                // Emit lightweight calendar summary rows in addition to queuing details.
-                return events.map(ev => ({
-                    eventDateRaw: null,
-                    headliner: ev.title,
-                    supportingActs: [],
-                    sourceUrl: ev.url,
-                }));
+                // Avoid emitting summary rows when detail pages are queued.
+                return [];
             }
 
             // If not running in crawler context, emit summary rows so callers
@@ -1034,13 +1051,8 @@ Actor.main(async () => {
 
             if (context?.crawler && detailRequests.length > 0) {
                 await context.crawler.addRequests(detailRequests);
-                // Emit lightweight calendar summary rows in addition to queuing details.
-                return events.map(ev => ({
-                    eventDateRaw: null,
-                    headliner: ev.title || ev.url,
-                    supportingActs: [],
-                    sourceUrl: ev.url,
-                }));
+                // Avoid emitting summary rows when detail pages are queued.
+                return [];
             }
 
             // Listings page itself does not emit rows when not in crawler context,
@@ -1109,7 +1121,7 @@ Actor.main(async () => {
         // Extracts artist names and times from event links
         // Link text format: "Artist Name [and Support Act] HH:MMPM"
         // ------------------------------------------------------------
-        emosAustin: async ({ page, request }) => {
+        emosAustin: async ({ page, request, context }) => {
             const sourceUrl = request.loadedUrl || request.url;
 
             const events = await page.$$eval('a[href*="ticketmaster.com"]', (anchors) => {
@@ -1190,7 +1202,97 @@ Actor.main(async () => {
                 }
             }
 
+            // When running in crawler context, queue Ticketmaster detail pages for richer lineups.
+            if (context?.crawler && events.length) {
+                const detailRequests = events.map((ev) => ({
+                    url: ev.url,
+                    userData: {
+                        venueId: request.userData && request.userData.venueId,
+                        parserId: 'emosAustinEvent',
+                    },
+                }));
+                if (detailRequests.length) {
+                    await context.crawler.addRequests(detailRequests);
+                    // Avoid emitting calendar summaries when detail pages are queued.
+                    return [];
+                }
+            }
+
             return normalizedEvents;
+        },
+
+        // ------------------------------------------------------------
+        // Emos Austin – TICKETMASTER EVENT DETAIL
+        // Extracts lineup from Ticketmaster LD+JSON or page text
+        // ------------------------------------------------------------
+        emosAustinEvent: async ({ page, request }) => {
+            const sourceUrl = request.loadedUrl || request.url;
+
+            const { performers, headingText, bodyText } = await page.evaluate(() => {
+                const performers = [];
+                const scripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+                for (const node of scripts) {
+                    try {
+                        const data = JSON.parse(node.textContent || '{}');
+                        const perf = data.performer || data.performers;
+                        if (perf) {
+                            const arr = Array.isArray(perf) ? perf : [perf];
+                            for (const p of arr) {
+                                const name = typeof p === 'string' ? p : (p && p.name);
+                                if (name && name.trim()) performers.push(name.trim());
+                            }
+                        }
+                    } catch (e) {
+                        // ignore malformed JSON
+                    }
+                }
+
+                const headingEl = document.querySelector('h1');
+                const headingText = headingEl ? (headingEl.textContent || '').trim() : null;
+                const bodyText = document.body ? (document.body.innerText || '') : '';
+
+                return { performers, headingText, bodyText };
+            });
+
+            let headliner = null;
+            const supportingActs = [];
+
+            if (performers && performers.length) {
+                headliner = performers[0] || null;
+                for (let i = 1; i < performers.length; i++) {
+                    if (performers[i]) supportingActs.push(performers[i]);
+                }
+            }
+
+            // Fallback: parse body text for "with ..." lines if JSON-LD lacked lineup
+            if (!headliner && headingText) headliner = headingText;
+            if (bodyText && supportingActs.length === 0) {
+                const lines = bodyText.split('\n').map(l => l.trim()).filter(Boolean);
+                for (const line of lines) {
+                    if (/^(with|featuring|feat\.?|w\/)\s+/i.test(line)) {
+                        let artistStr = line.replace(/^(with|featuring|feat\.?|w\/)\s+/i, '').trim();
+                        artistStr = artistStr.replace(/\s*on\s+.*/i, '').replace(/\s+at\s+.*/i, '').replace(/\s+in\s+.*/i, '');
+                        if (artistStr) {
+                            const parts = artistStr
+                                .split(/,|\s+and\s+|\s+&\s+|\s*\/\s*|\s*\+\s*/i)
+                                .map(p => p.trim())
+                                .filter(Boolean);
+                            for (const part of parts) {
+                                if (part.length > 1 && !supportingActs.includes(part)) supportingActs.push(part);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return [
+                {
+                    eventDateRaw: null,
+                    headliner,
+                    supportingActs,
+                    sourceUrl,
+                },
+            ];
         },
 
         // ------------------------------------------------------------
@@ -1354,12 +1456,11 @@ Actor.main(async () => {
                     };
                 });
 
-                if (detailReqs.length) await context.crawler.addRequests(detailReqs);
-                // Emit lightweight summary rows in addition to queuing detail pages.
-                return events.map((ev) => {
-                    const parsed = parseEvent(ev.text);
-                    return { ...parsed, eventDateRaw: ev.calendarDate || parsed.eventDateRaw || null, sourceUrl: ev.url || sourceUrl };
-                });
+                if (detailReqs.length) {
+                    await context.crawler.addRequests(detailReqs);
+                    // Avoid emitting summary rows when detail pages are queued.
+                    return [];
+                }
             }
 
             // Not running in crawler context: return parsed summary rows
@@ -1587,5 +1688,3 @@ Actor.main(async () => {
 
     await crawler.run(startRequests);
 });
-
-

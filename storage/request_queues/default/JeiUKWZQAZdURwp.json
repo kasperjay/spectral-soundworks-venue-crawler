@@ -1,9 +1,0 @@
-{
-	"id": "JeiUKWZQAZdURwp",
-	"json": "{\"id\":\"JeiUKWZQAZdURwp\",\"url\":\"https://www.mohawkaustin.com/events/\",\"loadedUrl\":\"https://mohawkaustin.com/events/\",\"uniqueKey\":\"https://www.mohawkaustin.com/events\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"mohawkAustin\",\"parserId\":\"mohawkAustin\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-22T13:33:34.219Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://www.mohawkaustin.com/events",
-	"url": "https://www.mohawkaustin.com/events/"
-}

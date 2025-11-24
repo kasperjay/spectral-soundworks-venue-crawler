@@ -1,29 +1,57 @@
 {
-  "requestsFinished": 4,
-  "requestsFailed": 0,
-  "requestsRetries": 0,
-  "requestsFailedPerMinute": 0,
-  "requestsFinishedPerMinute": 6,
-  "requestMinDurationMillis": 1636,
-  "requestMaxDurationMillis": 27382,
-  "requestTotalFailedDurationMillis": 0,
-  "requestTotalFinishedDurationMillis": 66400,
-  "crawlerStartedAt": "2025-11-22T13:33:05.168Z",
-  "crawlerFinishedAt": "2025-11-22T13:33:42.654Z",
-  "statsPersistedAt": "2025-11-22T13:33:42.654Z",
-  "crawlerRuntimeMillis": 37559,
-  "crawlerLastStartTimestamp": 1763818385096,
+  "requestsFinished": 0,
+  "requestsFailed": 9,
+  "requestsRetries": 9,
+  "requestsFailedPerMinute": 40,
+  "requestsFinishedPerMinute": 0,
+  "requestMinDurationMillis": null,
+  "requestMaxDurationMillis": 0,
+  "requestTotalFailedDurationMillis": 1895,
+  "requestTotalFinishedDurationMillis": 0,
+  "crawlerStartedAt": "2025-11-24T08:49:10.183Z",
+  "crawlerFinishedAt": "2025-11-24T08:49:23.571Z",
+  "statsPersistedAt": "2025-11-24T08:49:23.571Z",
+  "crawlerRuntimeMillis": 13460,
+  "crawlerLastStartTimestamp": 1763974150111,
   "requestRetryHistogram": [
-    4
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    9
   ],
   "statsId": 0,
-  "requestAvgFailedDurationMillis": null,
-  "requestAvgFinishedDurationMillis": 16600,
-  "requestTotalDurationMillis": 66400,
-  "requestsTotal": 4,
-  "requestsWithStatusCode": {
-    "200": 4
+  "requestAvgFailedDurationMillis": 211,
+  "requestAvgFinishedDurationMillis": null,
+  "requestTotalDurationMillis": 1895,
+  "requestsTotal": 9,
+  "requestsWithStatusCode": {},
+  "errors": {
+    "/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:369:19": {
+      "missing error code": {
+        "Error": {
+          "Detected a session error, rotating session... ": {
+            "count": 9
+          }
+        }
+      }
+    }
   },
-  "errors": {},
-  "retryErrors": {}
+  "retryErrors": {
+    "/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:369:19": {
+      "missing error code": {
+        "Error": {
+          "Detected a session error, rotating session... ": {
+            "count": 90
+          }
+        }
+      }
+    }
+  }
 }

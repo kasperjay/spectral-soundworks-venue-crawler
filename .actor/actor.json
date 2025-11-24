@@ -5,9 +5,10 @@
   "description": "Scrapes events from 10 Austin venues, including JS-rendered Mohawk using Playwright.",
   "version": "1.0.0",
   "dockerfile": "./Dockerfile",
-  "input": "./INPUT_SCHEMA.json",
+    "input": "./INPUT_SCHEMA.json",
   "readme": "./README.md",
   "meta": {
-    "templateId": "js-generic"
+    "templateId": "js-generic",
+    "generatedBy": "gpt-5"
   }
 }
