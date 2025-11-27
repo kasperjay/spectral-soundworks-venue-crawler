@@ -33,17 +33,15 @@
       },
       "minItems": 1
     },
-
     "maxConcurrency": {
       "title": "Max concurrency",
       "type": "integer",
       "description": "How many pages to crawl in parallel.",
       "default": 5,
-      "minimum": 1,
+      "minimum": 2,
       "maximum": 50,
       "editor": "number"
     },
-
     "proxyConfiguration": {
       "title": "Proxy configuration",
       "type": "object",

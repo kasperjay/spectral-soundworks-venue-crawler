@@ -41,7 +41,7 @@ Actor.main(async () => {
                     "id": "empireAtAustin",
                     "startUrl": "https://empireatx.com/calendar/",
                     "parserId": "empireAtAustin"
-                },
+                },  
                 {
                     "id": "stubbsAustin",
                     "startUrl": "https://stubbsaustin.com/concert-listings/",
@@ -49,11 +49,11 @@ Actor.main(async () => {
                 },
                 {
                     "id": "emosAustin",
-                    "startUrl": "https://www.emosaustin.com/shows/calendar/"
+                    "startUrl": "https://www.emosaustin.com/shows/"
                 },
                 {
                     "id": "scootInn",
-                    "startUrl": "https://www.scootinnaustin.com/shows/calendar/'"
+                    "startUrl": "https://www.scootinnaustin.com/shows/"
                 },
                 {
                     "id": "antones",
@@ -69,13 +69,17 @@ Actor.main(async () => {
         return;
     }
 
-    const proxyConfiguration = await Actor.createProxyConfiguration({
-        password: 'apify_proxy_mrbIBtdfDTItumA8wW5KcfaKis3wHu0LDJ4AD',
-        proxyUrls: [
-            'http://auto:apify_proxy_mrbIBtdfDTItumA8wW5KcfaKis3wHu0LDJ4AD@proxy.apify.com:8000',
-        ],
+    // Build proxy configuration from input and environment variables
+    const proxyOptions = {
         ...(proxyConfigInput || {}),
-    });
+        ...(process.env.APIFY_PROXY_PASSWORD ? { password: process.env.APIFY_PROXY_PASSWORD } : {}),
+        ...(process.env.APIFY_PROXY_GROUPS ? { groups: process.env.APIFY_PROXY_GROUPS.split(',') } : {}),
+        ...(process.env.APIFY_PROXY_URL ? { proxyUrls: [process.env.APIFY_PROXY_URL] } : {}),
+    };
+    if (!proxyOptions.groups) proxyOptions.groups = ['AUTO'];
+
+    const proxyConfiguration = await Actor.createProxyConfiguration(proxyOptions);
+
     // ------------------------------------------------------------------------
     // Venue-specific parsers
     // Each parser returns either:
@@ -259,22 +263,16 @@ Actor.main(async () => {
             const sourceUrl = request.loadedUrl || request.url;
 
             try {
-                // Wait for the calendar/event widgets to render (Squarespace loads events via JS)
                 await page.waitForSelector('body, .timely-event, .event-excerpt, .event-item, .sqs-block-calendar, .events-collection-list, .event, .event-list', { timeout: 7000 });
             } catch (e) {
                 // ignore
             }
 
-            // --- Timely API fallback ---
-            // The Continental Club embeds a Timely calendar. We can directly call the Timely
-            // JSON API to get structured events for this venue (more reliable than scanning DOM).
             try {
                 const now = Math.floor(Date.now() / 1000);
                 const oneYear = 365 * 24 * 3600;
                 const end = now + oneYear;
 
-                // Calendar/venue IDs were observed in network capture. These are specific to
-                // The Continental Club - Austin embed and should be stable for this site.
                 const apiUrl = `https://timelyapp.time.ly/api/calendars/54714987/events?group_by_date=1&venues=678194628&timezone=America/Chicago&view=month&start_date_utc=${now}&end_date_utc=${end}&per_page=1000&page=1`;
 
                 const resp = await page.request.get(apiUrl, {
@@ -294,7 +292,6 @@ Actor.main(async () => {
                                 const customUrl = it.custom_url || null;
                                 const id = it.id || null;
 
-                                // Construct a likely timely event URL when possible
                                 let timelyEventUrl = null;
                                 try {
                                     if (customUrl) {
@@ -316,7 +313,6 @@ Actor.main(async () => {
                         }
 
                         if (rows.length) {
-                            // Queue detail pages for richer parsing (optional)
                             let queuedDetails = false;
                             if (context?.crawler) {
                                 const detailReqs = [];
@@ -346,25 +342,16 @@ Actor.main(async () => {
                                 }
                             }
 
-                            // Avoid emitting calendar summaries when detail pages were queued
                             if (queuedDetails) return [];
-
-                            // Emit rows found from the API directly (no detail pages queued)
                             return rows;
                         }
                     }
                 }
             } catch (err) {
-                // network/JSON parsing errors are non-fatal; fall back to DOM parsing
-                // eslint-disable-next-line no-console
                 console.warn('Timely API fetch failed for continentalClubAustin:', err && err.message ? err.message : err);
             }
 
-            // If API and local DOM parsing didn't return events, try loading the Timely
-            // month page in a new Playwright page (this runs in-browser and bypasses the
-            // direct API 403 that blocks non-browser requests).
             try {
-                // Avoid navigating away from the current page; open a new page in the same context
                 const timelyId = '74avt53i';
                 const venuesId = '678194628';
                 const timelyUrl = `https://events.timely.fun/${timelyId}/month?venues=${venuesId}&nofilters=1&timely_id=timely-iframe-embed-0`;
@@ -406,14 +393,12 @@ Actor.main(async () => {
                             if (/\d{4}$/.test(last)) eventDateRaw = last;
                         }
 
-                        // Try to find a detail link on the timely node
                         const linkEl = node.querySelector('a[href*="/event/"]') || node.querySelector('a');
                         const detailUrl = linkEl ? (linkEl.href || null) : null;
 
                         rows.push({ eventDateRaw, title: title, headliner: title, supportingActs: [], sourceUrl: timelyUrlParam, detailUrl, timeText, minutes: parseTimeToMinutes(timeText), domIndex: idx });
                     });
 
-                    // group by date and try to mark headliners
                     const byDate = new Map();
                     rows.forEach((r) => {
                         const key = r.eventDateRaw || 'unknown';
@@ -438,7 +423,6 @@ Actor.main(async () => {
                 await timelyPage.close();
 
                 if (timelyRows && timelyRows.length) {
-                    // Queue detail pages found on the Timely page for richer parsing
                     let queuedDetails = false;
                     if (context?.crawler) {
                         const detailReqs = [];
@@ -461,11 +445,9 @@ Actor.main(async () => {
                         }
                     }
 
-                    // Normalize titles into headliner + supportingActs here (split multi-act titles)
                     const normalize = (s) => (s || '').replace(/\s*@\s*\d.*$/,'').replace(/\s*\(.*?\)\s*/g,'').trim();
                     const splitArtists = (s) => {
                         const cleaned = normalize(s);
-                        // split on commas, ' with ', ' feat', 'featuring', '&', ' and ', '/', ' + '
                         const parts = cleaned.split(/,|\s+with\s+|\s+feat\.?\s+|\s+featuring\s+|\s+&\s+|\s+and\s+|\s*\/\s*|\s*\+\s*/i).map(p => (p||'').trim()).filter(Boolean);
                         if (parts.length === 0) return { headliner: cleaned || null, supports: [] };
                         return { headliner: parts[0], supports: parts.slice(1) };
@@ -476,13 +458,10 @@ Actor.main(async () => {
                         return { eventDateRaw: r.eventDateRaw || null, headliner: parts.headliner || null, supportingActs: parts.supports, sourceUrl: r.sourceUrl || sourceUrl };
                     });
 
-                    // Avoid emitting summaries when detail pages will produce rows
                     if (queuedDetails) return [];
                     return rowsOut;
                 }
             } catch (e) {
-                // non-fatal; fall back to existing DOM parsing
-                // eslint-disable-next-line no-console
                 console.warn('Timely page parse fallback failed:', e && e.message ? e.message : e);
             }
 
@@ -495,11 +474,9 @@ Actor.main(async () => {
                     results.push({ title: title.trim(), url: url || null, dateText: dateText || null, key });
                 }
 
-                // Try Timely widget-like nodes first
                 const timely = Array.from(document.querySelectorAll('.timely-event'));
                 if (timely.length) {
                     timely.forEach((node) => {
-                        // skip navigation/menu items
                         if (node.closest && node.closest('nav, .menu, .site-navigation, .main-nav')) return;
                         const titleEl = node.querySelector('.timely-event-title-text') || node.querySelector('.title') || node.querySelector('h2, h3, h4');
                         let title = titleEl ? (titleEl.textContent || '').trim() : null;
@@ -530,11 +507,9 @@ Actor.main(async () => {
                     return Array.from(map.values()).map(({title, url, dateText}) => ({ title, url, dateText }));
                 }
 
-                // Generic candidates
                 const candidates = Array.from(document.querySelectorAll('article, li, .event, .event-item, .listing-item, .show, .post'));
                 if (candidates.length) {
                     candidates.forEach((node) => {
-                        // skip navigation/menu items
                         if (node.closest && node.closest('nav, .menu, .site-navigation, .main-nav')) return;
                         const titleEl = node.querySelector('h1, h2, h3, h4, .title, .entry-title, .event-title, a.event-title') || node.querySelector('a');
                         const title = titleEl ? (titleEl.textContent || '').trim() : null;
@@ -544,7 +519,6 @@ Actor.main(async () => {
                         const timeEl = node.querySelector('time, .date, .event-date, .posted-on');
                         const dateText = timeEl ? (timeEl.getAttribute('datetime') || (timeEl.textContent || '').trim()) : null;
 
-                        // skip obvious non-event section titles
                         const tLow = (title || '').toLowerCase();
                         const deny = ['about', 'contact', 'gallery', 'shop', 'welcome', 'home', 'contact us', 'austin shop', 'houston shop', 'austin tickets'];
                         if (tLow && deny.includes(tLow)) return;
@@ -556,7 +530,6 @@ Actor.main(async () => {
                     return Array.from(map.values()).map(({title, url, dateText}) => ({ title, url, dateText }));
                 }
 
-                // Fallback: text-scan
                 const text = document.body ? (document.body.innerText || '') : '';
                 if (text) {
                     const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
@@ -617,7 +590,6 @@ Actor.main(async () => {
 
             if (queuedDetails) return [];
 
-            // Otherwise emit calendar rows directly (no detail pages queued)
             return (rows || []).flatMap((r) => {
                 if (!r.title) return [];
                 return [{ eventDateRaw: r.dateText || null, headliner: r.title, supportingActs: [], sourceUrl }];
@@ -682,8 +654,6 @@ Actor.main(async () => {
                 }
             }
 
-            // If this is a Timely event page, try additional heuristics: the page often
-            // contains a single heading with the full title and then lines like "Featuring...".
             if ((isTimely) && (!candidateNames.length || !headingTitle)) {
                 const timelyCandidates = [];
                 for (const l of allLines.slice(0, 40)) {
@@ -697,7 +667,6 @@ Actor.main(async () => {
                     const parts = line.split(/,| & | and |\+/i).map(p => normalizeName(p)).filter(Boolean);
                     for (const p of parts) if (p) candidateNames.push(p);
                 }
-                // If still empty, attempt to use headingTitle as single headliner
                 if (!candidateNames.length && headingTitle) {
                     candidateNames.push(headingTitle);
                 }
@@ -732,7 +701,6 @@ Actor.main(async () => {
 
                     if (!text || !href) continue;
 
-                    // Filter to only event links (avoid navigation/other links)
                     if (!/[a-z0-9]/i.test(text) || text.length < 3) continue;
 
                     const url = a.href;
@@ -761,12 +729,9 @@ Actor.main(async () => {
 
             if (context?.crawler && detailRequests.length > 0) {
                 await context.crawler.addRequests(detailRequests);
-                // Avoid emitting summary rows here; detail pages will produce the records.
                 return [];
             }
 
-            // If not running in crawler context, emit summary rows so callers
-            // (or tests) get immediate results.
             return events.map(ev => ({ eventDateRaw: null, headliner: ev.title, supportingActs: [], sourceUrl: ev.url }));
         },
 
@@ -793,9 +758,7 @@ Actor.main(async () => {
             let headliner = calendarTitle || headingText || null;
             const supportingActs = [];
 
-            // Extract supporting acts from heading/title using "w/" or "with" patterns
             if (headliner) {
-                // Match patterns like "Satsang w/ Tim Snider" or "Artist with Support Act"
                 const withMatch = headliner.match(/(.+?)\s+(?:w\/|with)\s+(.+?)(?:\s+at\s+|$)/i);
                 if (withMatch) {
                     const mainArtist = withMatch[1].trim();
@@ -803,7 +766,6 @@ Actor.main(async () => {
                     
                     headliner = mainArtist;
                     
-                    // Parse multiple supports if separated by "and", ",", "&", etc.
                     const supportParts = supports
                         .split(/,|\s+and\s+|\s+&\s+|\s*\/\s*/i)
                         .map(p => p.replace(/\s+at\s+.*/i, '').trim())
@@ -815,11 +777,9 @@ Actor.main(async () => {
                 }
             }
 
-            // Also look for standalone lines that match "with X" or "featuring X" patterns
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
 
-                // Match "with X" or "featuring X" patterns at start of line
                 if (/^(with|featuring|feat\.?|w\/)\s+/i.test(line)) {
                     let artistStr = line.replace(/^(with|featuring|feat\.?|w\/)\s+/i, '').trim();
                     artistStr = artistStr.replace(/\s*on\s+.*/i, '').replace(/\s+at\s+.*/i, '');
@@ -839,16 +799,14 @@ Actor.main(async () => {
                 }
             }
 
-            // Clean up headliner to remove extra text
             if (headliner) {
                 headliner = headliner
-                    .replace(/\s+\d{1,2}:\d{2}\s*(am|pm)?/i, '')  // remove times
-                    .replace(/\s*[\-–]\s*.*$/, '') // remove trailing dash descriptions
-                    .replace(/\s+at\s+.*/i, '') // remove venue/location
+                    .replace(/\s+\d{1,2}:\d{2}\s*(am|pm)?/i, '')
+                    .replace(/\s*[\-–]\s*.*$/, '')
+                    .replace(/\s+at\s+.*/i, '')
                     .trim();
             }
 
-            // Dedupe supportingActs
             const uniqueSupports = Array.from(new Set(supportingActs));
 
             return [
@@ -879,7 +837,6 @@ Actor.main(async () => {
 
                     if (!text || !href) continue;
 
-                    // Filter to only event links (avoid navigation/other links)
                     if (!/[a-z0-9]/i.test(text) || text.length < 3) continue;
 
                     const url = a.href;
@@ -908,12 +865,9 @@ Actor.main(async () => {
 
             if (context?.crawler && detailRequests.length > 0) {
                 await context.crawler.addRequests(detailRequests);
-                // Avoid emitting summary rows when detail pages are queued.
                 return [];
             }
 
-            // If not running in crawler context, emit summary rows so callers
-            // (or tests) get immediate results.
             return events.map(ev => ({ eventDateRaw: null, headliner: ev.title, supportingActs: [], sourceUrl: ev.url }));
         },
 
@@ -940,9 +894,7 @@ Actor.main(async () => {
             let headliner = calendarTitle || headingText || null;
             const supportingActs = [];
 
-            // Extract supporting acts from heading/title using "w/" or "with" patterns
             if (headliner) {
-                // Match patterns like "Artist w/ Support Act" or "Artist with Support Act"
                 const withMatch = headliner.match(/(.+?)\s+(?:w\/|with)\s+(.+?)(?:\s+(?:at|in)\s+|$)/i);
                 if (withMatch) {
                     const mainArtist = withMatch[1].trim();
@@ -950,7 +902,6 @@ Actor.main(async () => {
                     
                     headliner = mainArtist;
                     
-                    // Parse multiple supports if separated by "and", ",", "&", etc.
                     const supportParts = supports
                         .split(/,|\s+and\s+|\s+&\s+|\s*\/\s*/i)
                         .map(p => p.replace(/\s+(?:at|in)\s+.*/i, '').trim())
@@ -962,11 +913,9 @@ Actor.main(async () => {
                 }
             }
 
-            // Also look for standalone lines that match "with X" or "featuring X" patterns
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
 
-                // Match "with X" or "featuring X" patterns at start of line
                 if (/^(with|featuring|feat\.?|w\/)\s+/i.test(line)) {
                     let artistStr = line.replace(/^(with|featuring|feat\.?|w\/)\s+/i, '').trim();
                     artistStr = artistStr.replace(/\s*on\s+.*/i, '').replace(/\s+at\s+.*/i, '').replace(/\s+in\s+.*/i, '');
@@ -986,17 +935,19 @@ Actor.main(async () => {
                 }
             }
 
-            // Clean up headliner to remove extra text
             if (headliner) {
                 headliner = headliner
                     .replace(/\s+\d{1,2}:\d{2}\s*(am|pm)?/i, '')  // remove times
                     .replace(/\s*[\-–]\s*.*$/, '') // remove trailing dash descriptions
                     .replace(/\s+at\s+.*/i, '') // remove venue/location
                     .replace(/\s+in\s+.*/i, '') // remove "in the Garage/Control Room"
+                    .replace(/\s+\d{1,2}:\d{2}\s*(am|pm)?/i, '')
+                    .replace(/\s*[\-–]\s*.*$/, '')
+                    .replace(/\s+at\s+.*/i, '')
+                    .replace(/\s+in\s+.*/i, '')
                     .trim();
             }
 
-            // Dedupe supportingActs
             const uniqueSupports = Array.from(new Set(supportingActs));
 
             return [
@@ -1007,6 +958,182 @@ Actor.main(async () => {
                     sourceUrl,
                 },
             ];
+        },
+
+        // ------------------------------------------------------------
+        // Emo's Austin – Shows page (Next.js, JSON-LD first, DOM fallback)
+        // ------------------------------------------------------------
+        emosAustin: async ({ page, request }) => {
+            const sourceUrl = request.loadedUrl || request.url;
+
+            try {
+                await page.waitForSelector('body', { timeout: 10000 });
+            } catch (e) {
+                // ignore
+            }
+
+            const events = await page.evaluate(() => {
+                const rows = [];
+                const seen = new Set();
+
+                const pushRow = (name, url, dateRaw) => {
+                    if (!name) return;
+                    const key = `${name.toLowerCase()}|${url || ''}|${dateRaw || ''}`;
+                    if (seen.has(key)) return;
+                    seen.add(key);
+                    rows.push({
+                        headliner: name.trim(),
+                        supportingActs: [],
+                        eventDateRaw: dateRaw || null,
+                        sourceUrl: url || null,
+                    });
+                };
+
+                const extractFromObject = (obj) => {
+                    if (!obj || typeof obj !== 'object') return;
+                    if (Array.isArray(obj)) {
+                        obj.forEach(extractFromObject);
+                        return;
+                    }
+
+                    if (obj['@type'] === 'MusicEvent' && obj.name) {
+                        pushRow(obj.name, obj.url || obj.sameAs || null, obj.startDate || obj.date || null);
+                    }
+
+                    if (obj['@graph']) extractFromObject(obj['@graph']);
+                };
+
+                const scripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+                for (const script of scripts) {
+                    try {
+                        const text = script.textContent || '';
+                        const parsed = JSON.parse(text);
+                        extractFromObject(parsed);
+                    } catch (e) {
+                        // ignore malformed JSON-LD
+                    }
+                }
+
+                if (!rows.length) {
+                    const cardSelectors = [
+                        '[data-automation="event-card"]',
+                        '[data-automation="show-card"]',
+                        'a[href*="/event/"]',
+                        'a[href*="ticketmaster.com"]',
+                    ];
+
+                    const cards = Array.from(document.querySelectorAll(cardSelectors.join(',')));
+                    for (const card of cards) {
+                        const titleEl = card.querySelector('h3, h4, h2, .chakra-heading, .title') || card;
+                        const title = titleEl ? (titleEl.textContent || '').trim() : null;
+
+                        const linkEl = card.tagName === 'A' ? card : card.querySelector('a[href]');
+                        const url = linkEl ? linkEl.href : null;
+
+                        const dateEl = card.querySelector('time');
+                        const dateRaw = dateEl ? (dateEl.getAttribute('datetime') || (dateEl.textContent || '').trim()) : null;
+
+                        pushRow(title, url, dateRaw);
+                    }
+                }
+
+                return rows;
+            });
+
+            return (events || []).map((ev) => ({
+                headliner: ev.headliner || null,
+                supportingActs: ev.supportingActs || [],
+                eventDateRaw: ev.eventDateRaw || null,
+                sourceUrl: ev.sourceUrl || sourceUrl,
+            }));
+        },
+
+        // ------------------------------------------------------------
+        // Scoot Inn – Shows page (Next.js, JSON-LD first, DOM fallback)
+        // ------------------------------------------------------------
+        scootInn: async ({ page, request }) => {
+            const sourceUrl = request.loadedUrl || request.url;
+
+            try {
+                await page.waitForSelector('body', { timeout: 10000 });
+            } catch (e) {
+                // ignore
+            }
+
+            const events = await page.evaluate(() => {
+                const rows = [];
+                const seen = new Set();
+
+                const pushRow = (name, url, dateRaw) => {
+                    if (!name) return;
+                    const key = `${name.toLowerCase()}|${url || ''}|${dateRaw || ''}`;
+                    if (seen.has(key)) return;
+                    seen.add(key);
+                    rows.push({
+                        headliner: name.trim(),
+                        supportingActs: [],
+                        eventDateRaw: dateRaw || null,
+                        sourceUrl: url || null,
+                    });
+                };
+
+                const extractFromObject = (obj) => {
+                    if (!obj || typeof obj !== 'object') return;
+                    if (Array.isArray(obj)) {
+                        obj.forEach(extractFromObject);
+                        return;
+                    }
+
+                    if (obj['@type'] === 'MusicEvent' && obj.name) {
+                        pushRow(obj.name, obj.url || obj.sameAs || null, obj.startDate || obj.date || null);
+                    }
+
+                    if (obj['@graph']) extractFromObject(obj['@graph']);
+                };
+
+                const scripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+                for (const script of scripts) {
+                    try {
+                        const text = script.textContent || '';
+                        const parsed = JSON.parse(text);
+                        extractFromObject(parsed);
+                    } catch (e) {
+                        // ignore malformed JSON-LD
+                    }
+                }
+
+                if (!rows.length) {
+                    const cardSelectors = [
+                        '[data-automation="event-card"]',
+                        '[data-automation="show-card"]',
+                        'a[href*="/event/"]',
+                        'a[href*="ticketmaster.com"]',
+                    ];
+
+                    const cards = Array.from(document.querySelectorAll(cardSelectors.join(',')));
+                    for (const card of cards) {
+                        const titleEl = card.querySelector('h3, h4, h2, .chakra-heading, .title') || card;
+                        const title = titleEl ? (titleEl.textContent || '').trim() : null;
+
+                        const linkEl = card.tagName === 'A' ? card : card.querySelector('a[href]');
+                        const url = linkEl ? linkEl.href : null;
+
+                        const dateEl = card.querySelector('time');
+                        const dateRaw = dateEl ? (dateEl.getAttribute('datetime') || (dateEl.textContent || '').trim()) : null;
+
+                        pushRow(title, url, dateRaw);
+                    }
+                }
+
+                return rows;
+            });
+
+            return (events || []).map((ev) => ({
+                headliner: ev.headliner || null,
+                supportingActs: ev.supportingActs || [],
+                eventDateRaw: ev.eventDateRaw || null,
+                sourceUrl: ev.sourceUrl || sourceUrl,
+            }));
         },
 
         // Grabs all /tm-event/ links and queues them
@@ -1044,19 +1171,16 @@ Actor.main(async () => {
                 userData: {
                     venueId,
                     parserId: 'stubbsAustinEvent',
-                    calendarDateText: null,          // not pairing dates for now
-                    calendarTitle: ev.title || null, // used as headliner fallback
+                    calendarDateText: null,
+                    calendarTitle: ev.title || null,
                 },
             }));
 
             if (context?.crawler && detailRequests.length > 0) {
                 await context.crawler.addRequests(detailRequests);
-                // Avoid emitting summary rows when detail pages are queued.
                 return [];
             }
 
-            // Listings page itself does not emit rows when not in crawler context,
-            // but return summaries for tests and callers.
             return events.map(ev => ({ eventDateRaw: null, headliner: ev.title || ev.url, supportingActs: [], sourceUrl: ev.url }));
         },
 
@@ -1099,8 +1223,6 @@ Actor.main(async () => {
                     .map((s) => s.trim())
                     .filter(Boolean);
 
-                // Treat all "with ..." names as supports;
-                // keep headliner from calendarTitle/titleText
                 if (parts.length > 0) {
                     supportingActs = parts;
                 }
@@ -1114,434 +1236,34 @@ Actor.main(async () => {
                     sourceUrl,
                 },
             ];
-        },
+        }
 
-        // ------------------------------------------------------------
-        // Emos Austin – CALENDAR PAGE
-        // Extracts artist names and times from event links
-        // Link text format: "Artist Name [and Support Act] HH:MMPM"
-        // ------------------------------------------------------------
-        emosAustin: async ({ page, request, context }) => {
-            const sourceUrl = request.loadedUrl || request.url;
-
-            const events = await page.$$eval('a[href*="ticketmaster.com"]', (anchors) => {
-                const results = [];
-                const seen = new Set();
-
-                for (const a of anchors) {
-                    const text = (a.textContent || '').trim();
-                    if (!text) continue;
-
-                    // Skip if URL doesn't look like a Ticketmaster event
-                    const href = a.href || '';
-                    if (!/ticketmaster\.com/.test(href)) continue;
-
-                    // De-duplicate by href
-                    if (seen.has(href)) continue;
-                    seen.add(href);
-
-                    results.push({ text, url: href });
-                }
-
-                return results;
-            });
-
-            if (!events || !events.length) {
-                return [];
-            }
-
-            // Parse each event: extract artist name and time from the link text
-            const parseEvent = (linkText) => {
-                // Remove "MOVED TO X - " prefix that some shows have
-                let text = linkText.replace(/^MOVED\s+TO\s+[A-Z\s'-]+-?\s*/i, '');
-                
-                // Format: "Artist Name [and Support Act]HH:MMPM"
-                // Time pattern: digits followed by optional minutes and AM/PM
-                const timeMatch = text.match(/(\d{1,2}):?(\d{2})?\s*(am|pm)/i);
-                
-                let artistText = text;
-                let timeText = null;
-
-                if (timeMatch) {
-                    timeText = timeMatch[0].trim();
-                    // Remove time from artist text
-                    artistText = text.replace(timeMatch[0], '').trim();
-                }
-
-                // Remove tour names: "Artist Name - Tour Name" -> "Artist Name"
-                artistText = artistText.replace(/\s*-\s*(tour|leg).*$/i, '').trim();
-                // Also remove any remaining trailing dash and cleanup
-                artistText = artistText.replace(/[\s-–—]+$/, '').trim();
-
-                if (!artistText) return null;
-
-                // Split artists by "and", " w/ ", " with ", "&", commas
-                const artistParts = artistText
-                    .split(/\s+(?:and|w\/|with)\s+|,|\s+&\s+/i)
-                    .map(p => p.trim())
-                    .filter(Boolean);
-
-                if (artistParts.length === 0) return null;
-
-                return {
-                    headliner: artistParts[0] || null,
-                    supportingActs: artistParts.slice(1),
-                    eventDateRaw: null, // Calendar doesn't show explicit dates in visible text
-                    timeText,
-                };
-            };
-
-            const normalizedEvents = [];
-            for (const ev of events) {
-                const parsed = parseEvent(ev.text);
-                if (parsed) {
-                    normalizedEvents.push({
-                        ...parsed,
-                        sourceUrl: ev.url,
-                    });
-                }
-            }
-
-            // When running in crawler context, queue Ticketmaster detail pages for richer lineups.
-            if (context?.crawler && events.length) {
-                const detailRequests = events.map((ev) => ({
-                    url: ev.url,
-                    userData: {
-                        venueId: request.userData && request.userData.venueId,
-                        parserId: 'emosAustinEvent',
-                    },
-                }));
-                if (detailRequests.length) {
-                    await context.crawler.addRequests(detailRequests);
-                    // Avoid emitting calendar summaries when detail pages are queued.
-                    return [];
-                }
-            }
-
-            return normalizedEvents;
-        },
-
-        // ------------------------------------------------------------
-        // Emos Austin – TICKETMASTER EVENT DETAIL
-        // Extracts lineup from Ticketmaster LD+JSON or page text
-        // ------------------------------------------------------------
-        emosAustinEvent: async ({ page, request }) => {
-            const sourceUrl = request.loadedUrl || request.url;
-
-            const { performers, headingText, bodyText } = await page.evaluate(() => {
-                const performers = [];
-                const scripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
-                for (const node of scripts) {
-                    try {
-                        const data = JSON.parse(node.textContent || '{}');
-                        const perf = data.performer || data.performers;
-                        if (perf) {
-                            const arr = Array.isArray(perf) ? perf : [perf];
-                            for (const p of arr) {
-                                const name = typeof p === 'string' ? p : (p && p.name);
-                                if (name && name.trim()) performers.push(name.trim());
-                            }
-                        }
-                    } catch (e) {
-                        // ignore malformed JSON
-                    }
-                }
-
-                const headingEl = document.querySelector('h1');
-                const headingText = headingEl ? (headingEl.textContent || '').trim() : null;
-                const bodyText = document.body ? (document.body.innerText || '') : '';
-
-                return { performers, headingText, bodyText };
-            });
-
-            let headliner = null;
-            const supportingActs = [];
-
-            if (performers && performers.length) {
-                headliner = performers[0] || null;
-                for (let i = 1; i < performers.length; i++) {
-                    if (performers[i]) supportingActs.push(performers[i]);
-                }
-            }
-
-            // Fallback: parse body text for "with ..." lines if JSON-LD lacked lineup
-            if (!headliner && headingText) headliner = headingText;
-            if (bodyText && supportingActs.length === 0) {
-                const lines = bodyText.split('\n').map(l => l.trim()).filter(Boolean);
-                for (const line of lines) {
-                    if (/^(with|featuring|feat\.?|w\/)\s+/i.test(line)) {
-                        let artistStr = line.replace(/^(with|featuring|feat\.?|w\/)\s+/i, '').trim();
-                        artistStr = artistStr.replace(/\s*on\s+.*/i, '').replace(/\s+at\s+.*/i, '').replace(/\s+in\s+.*/i, '');
-                        if (artistStr) {
-                            const parts = artistStr
-                                .split(/,|\s+and\s+|\s+&\s+|\s*\/\s*|\s*\+\s*/i)
-                                .map(p => p.trim())
-                                .filter(Boolean);
-                            for (const part of parts) {
-                                if (part.length > 1 && !supportingActs.includes(part)) supportingActs.push(part);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return [
-                {
-                    eventDateRaw: null,
-                    headliner,
-                    supportingActs,
-                    sourceUrl,
-                },
-            ];
-        },
-
-        // ------------------------------------------------------------
-        // Scoot Inn – CALENDAR PAGE
-        // Extracts artist names and times from event links (identical to Emos Austin)
-        // Link text format: "Artist Name [and Support Act] HH:MMPM"
-        // ------------------------------------------------------------
-        scootInn: async ({ page, request }) => {
-            const sourceUrl = request.loadedUrl || request.url;
-
-            const events = await page.$$eval('a[href*="ticketmaster.com"]', (anchors) => {
-                const results = [];
-                const seen = new Set();
-
-                for (const a of anchors) {
-                    const text = (a.textContent || '').trim();
-                    if (!text) continue;
-
-                    // Skip if URL doesn't look like a Ticketmaster event
-                    const href = a.href || '';
-                    if (!/ticketmaster\.com/.test(href)) continue;
-
-                    // De-duplicate by href
-                    if (seen.has(href)) continue;
-                    seen.add(href);
-
-                    results.push({ text, url: href });
-                }
-
-                return results;
-            });
-
-            if (!events || !events.length) {
-                return [];
-            }
-
-            // Parse each event: extract artist name and time from the link text
-            const parseEvent = (linkText) => {
-                // Remove "MOVED TO X - " prefix that some shows have
-                let text = linkText.replace(/^MOVED\s+TO\s+[A-Z\s'-]+-?\s*/i, '');
-                
-                // Format: "Artist Name [and Support Act]HH:MMPM"
-                // Time pattern: digits followed by optional minutes and AM/PM
-                const timeMatch = text.match(/(\d{1,2}):?(\d{2})?\s*(am|pm)/i);
-                
-                let artistText = text;
-                let timeText = null;
-
-                if (timeMatch) {
-                    timeText = timeMatch[0].trim();
-                    // Remove time from artist text
-                    artistText = text.replace(timeMatch[0], '').trim();
-                }
-
-                // Remove tour names: "Artist Name - Tour Name" -> "Artist Name"
-                artistText = artistText.replace(/\s*-\s*(tour|leg).*$/i, '').trim();
-                // Also remove any remaining trailing dash and cleanup
-                artistText = artistText.replace(/[\s-–—]+$/, '').trim();
-
-                if (!artistText) return null;
-
-                // Split artists by "and", " w/ ", " with ", "&", commas
-                const artistParts = artistText
-                    .split(/\s+(?:and|w\/|with)\s+|,|\s+&\s+/i)
-                    .map(p => p.trim())
-                    .filter(Boolean);
-
-                if (artistParts.length === 0) return null;
-
-                return {
-                    headliner: artistParts[0] || null,
-                    supportingActs: artistParts.slice(1),
-                    eventDateRaw: null, // Calendar doesn't show explicit dates in visible text
-                    timeText,
-                };
-            };
-
-            const normalizedEvents = [];
-            for (const ev of events) {
-                const parsed = parseEvent(ev.text);
-                if (parsed) {
-                    normalizedEvents.push({
-                        ...parsed,
-                        sourceUrl: ev.url,
-                    });
-                }
-            }
-
-            return normalizedEvents;
-        },
-
-        // ------------------------------------------------------------
-        // Antone's Nightclub – CALENDAR PAGE
-        // FullCalendar daygrid with in-page event anchors (href like "#tw-event-dialog-<id>")
-        // Link text includes artist and times, e.g. "Smallpools w/ Kevian Kraemer & The Romance Doors: 7:00pm Show: 8:00pm"
-        // ------------------------------------------------------------
-        antones: async ({ page, request, context }) => {
-            const sourceUrl = request.loadedUrl || request.url;
-
-            const events = await page.$$eval('a[href^="#tw-event-dialog-"], .fc-daygrid-event', (anchors) => {
-                const results = [];
-                const seen = new Set();
-
-                for (const a of anchors) {
-                    const text = (a.textContent || '').trim();
-                    if (!text) continue;
-
-                    const href = a.getAttribute('href') || a.href || '';
-                    const key = href.startsWith('#') ? href : href;
-                    if (seen.has(key)) continue;
-                    seen.add(key);
-
-                    let date = null;
-                    try {
-                        const dayEl = a.closest('[data-date], .fc-daygrid-day');
-                        if (dayEl) {
-                            date = dayEl.getAttribute('data-date') || null;
-                            if (!date) {
-                                const num = dayEl.querySelector('.fc-daygrid-day-number');
-                                if (num) date = (num.textContent || '').trim();
-                            }
-                        }
-                    } catch (e) {
-                        date = null;
-                    }
-
-                    results.push({ text, url: href, calendarDate: date });
-                }
-
-                return results;
-            });
-
-            if (!events || !events.length) return [];
-
-            // Helper to parse the visible anchor text into a lightweight summary.
-            const parseEvent = (text) => {
-                const s = (text || '').replace(/\s+/g, ' ').replace(/Doors\s*:/i, 'Doors:').replace(/Show\s*:/i, 'Show:').trim();
-                const doorsMatch = s.match(/Doors:\s*(\d{1,2}:?\d{0,2}\s*(am|pm))/i);
-                const showMatch = s.match(/Show:\s*(\d{1,2}:?\d{0,2}\s*(am|pm))/i);
-                const doorsTime = doorsMatch ? doorsMatch[1].trim() : null;
-                const showTime = showMatch ? showMatch[1].trim() : null;
-                let titlePart = s.replace(/Doors:\s*\d{1,2}:?\d{0,2}\s*(am|pm)/i, '').replace(/Show:\s*\d{1,2}:?\d{0,2}\s*(am|pm)/i, '').trim();
-                const parts = titlePart.split(/\s+w\/?\s+|\s+with\s+|,|\s+&\s+|\s+and\s+/i).map(p => p.trim()).filter(Boolean);
-                return { headliner: parts[0]||null, supportingActs: parts.slice(1), eventDateRaw: null, doorsTime, showTime };
-            };
-
-            // Queue modal/dialog detail requests if crawler context is present
-            if (context?.crawler) {
-                const base = (request.loadedUrl || request.url).split('#')[0];
-                const detailReqs = events.map((ev) => {
-                    const dialogId = (ev.url || '').replace(/^#/, '') || null;
-                    const url = base + (ev.url && ev.url.startsWith('#') ? ev.url : ev.url || '');
-                    return {
-                        url,
-                        userData: {
-                            venueId: request.userData && request.userData.venueId,
-                            parserId: 'antonesEvent',
-                            dialogId,
-                            calendarDate: ev.calendarDate || null,
-                        },
-                    };
-                });
-
-                if (detailReqs.length) {
-                    await context.crawler.addRequests(detailReqs);
-                    // Avoid emitting summary rows when detail pages are queued.
-                    return [];
-                }
-            }
-
-            // Not running in crawler context: return parsed summary rows
-            return events.map((ev) => {
-                const parsed = parseEvent(ev.text);
-                return { ...parsed, eventDateRaw: ev.calendarDate || parsed.eventDateRaw || null, sourceUrl: ev.url || sourceUrl };
-            });
-        },
-
-        // ------------------------------------------------------------
-        // Antone's – EVENT DIALOG PARSER
-        // Parses event modal/dialog content referenced by calendar anchors
-        // ------------------------------------------------------------
-        antonesEvent: async ({ page, request }) => {
-            const sourceUrl = request.loadedUrl || request.url;
-            const dialogId = request.userData && request.userData.dialogId;
-            const calendarDate = request.userData && request.userData.calendarDate;
-
-            if (!dialogId) return [];
-
-            const { heading, lines } = await page.evaluate((id) => {
-                const el = document.getElementById(id);
-                if (!el) return { heading: null, lines: [] };
-                const heading = el.querySelector('h1, h2, h3, .tw-event-title')?.textContent?.trim() || null;
-                const text = el.innerText || '';
-                const all = text.split('\n').map(s => s.trim()).filter(Boolean);
-                return { heading, lines: all };
-            }, dialogId);
-
-            let candidateLines = lines || [];
-            if (!candidateLines.length) {
-                const anchorText = await page.evaluate((id) => {
-                    const a = document.querySelector(`a[href="#${id}"]`);
-                    return a ? (a.textContent || '').trim() : null;
-                }, dialogId);
-                if (anchorText) candidateLines = [anchorText];
-            }
-
-            let headliner = heading || null;
-            const supportingActs = [];
-            let doorsTime = null;
-            let showTime = null;
-
-            for (const line of candidateLines) {
-                if (!line) continue;
-                const l = line.replace(/\s+/g,' ').trim();
-                const dMatch = l.match(/Doors:\s*(\d{1,2}:?\d{0,2}\s*(am|pm))/i);
-                const sMatch = l.match(/Show:\s*(\d{1,2}:?\d{0,2}\s*(am|pm))/i);
-                if (dMatch) doorsTime = dMatch[1].trim();
-                if (sMatch) showTime = sMatch[1].trim();
-
-                if (/\bw\/?\b|\bwith\b|,|&| and /i.test(l)) {
-                    const parts = l.split(/\s+w\/?\s+|\s+with\s+|,|\s+&\s+|\s+and\s+/i).map(p=>p.trim()).filter(Boolean);
-                    if (!headliner && parts.length) headliner = parts[0];
-                    for (let i=1;i<parts.length;i++) supportingActs.push(parts[i]);
-                }
-
-                if (!headliner && l.length>0 && l.length < 80 && !/Doors:|Show:|ticket/i.test(l)) {
-                    headliner = l;
-                }
-            }
-
-            const clean = (s) => (s||'').replace(/\s+at\s+.*/i,'').replace(/\s*-\s*Tour.*$/i,'').replace(/\(.*?\)/g,'').trim() || null;
-            const head = clean(headliner);
-            const supports = Array.from(new Set(supportingActs.map(clean).filter(Boolean)));
-
-            return [ { eventDateRaw: calendarDate || null, headliner: head, supportingActs: supports, sourceUrl } ];
-        },
     };
 
     // ------------------------------------------------------------------------
     // Build initial requests from input.venues
     // ------------------------------------------------------------------------
-    const startRequests = venues.map((venue) => ({
-        url: venue.startUrl,
-        userData: {
-            venueId: venue.id,
-            parserId: venue.parserId || venue.id,
-        },
-    }));
+    const normalizeVenue = (venue) => {
+        const v = { ...venue };
+        if (v.id && v.startUrl) {
+            if (['emosAustin', 'scootInn'].includes(v.id) && /\/shows\/calendar\/?$/i.test(v.startUrl)) {
+                v.startUrl = v.startUrl.replace(/\/shows\/calendar\/?$/i, '/shows/');
+            }
+        }
+        return v;
+    };
 
+    const startRequests = venues.map((venue) => {
+        const v = normalizeVenue(venue);
+        return {
+            url: v.startUrl,
+        userData: {
+                venueId: v.id,
+                parserId: v.parserId || v.id,
+        },
+        };
+    });
+    
     // ------------------------------------------------------------------------
     // Playwright crawler
     // ------------------------------------------------------------------------
@@ -1592,19 +1314,14 @@ Actor.main(async () => {
                 const cleanArtist = (s) => {
                     if (!s) return null;
                     let v = String(s || '');
-                    // Remove "XYZ Presents:" patterns at the start
                     v = v.replace(/^[^:]+\s+(?:Presents?|Pres\.):\s*/i, '');
-                    // Remove explicit time mentions like "@10pm", "@ 10:30 pm", "at 10pm"
                     v = v.replace(/@\s*\d{1,2}(:\d{2})?\s*(am|pm)?/i, '');
                     v = v.replace(/\bat\s+\d{1,2}(:\d{2})?\s*(am|pm)?\b/i, '');
-                    // Remove trailing dash/en dash and anything after (often extra descriptors)
                     v = v.replace(/[\-–—]\s*[^,()]+$/g, '');
-                    // Remove parenthetical notes
                     v = v.replace(/\(.*?\)/g, '');
-                    // Normalize whitespace and punctuation
+                    v = v.replace(/:\s*[^:]*\bTour\b.*$/i, ''); // drop trailing ": XYZ Tour"
                     v = v.replace(/[\u2018\u2019\u201C\u201D]/g, "'");
                     v = v.replace(/[\s\u00A0]+/g, ' ').trim();
-                    // Remove trailing commas or spurious punctuation
                     v = v.replace(/^[,;:\s]+|[,;:\s]+$/g, '');
                     if (!v) return null;
                     return v;
@@ -1613,7 +1330,6 @@ Actor.main(async () => {
                 if (item.headliner) {
                     const rows = [];
 
-                    // Split headliner string when it looks like multiple artists (comma, ' with ', 'feat', '&', 'and', '/').
                     const normalizeTitle = (s) => (s || '').replace(/\s*@\s*\d.*$/,'').replace(/\s*\(.*?\)\s*/g,'').trim();
                     const splitParts = (s) => (normalizeTitle(s).split(/,|\s+with\s+|\s+feat\.?\s+|\s+featuring\s+|\s+&\s+|\s+and\s+|\s*\/\s*|\s*\+\s*/i).map(p => p.trim()).filter(Boolean));
 
@@ -1623,7 +1339,6 @@ Actor.main(async () => {
 
                     rows.push({ ...base, role: 'headliner', artistName: mainHeadliner });
 
-                    // supportingActs from parser + parsed tail parts
                     const supports = new Set();
                     if (Array.isArray(item.supportingActs)) {
                         for (const s of item.supportingActs) if (s) supports.add(cleanArtist(s) || s);
@@ -1655,8 +1370,6 @@ Actor.main(async () => {
                 return [];
             });
 
-            // Deduplicate normalized rows by artistName only (ignore role/date/sourceUrl)
-            // This makes the dataset contain one row per artist (no repeats across dates).
             const dedupeKey = (r) => `${(r.artistName||'').toLowerCase().replace(/\s+/g,' ')}`;
             const seen = new Set();
             const uniqueRows = [];
@@ -1686,5 +1399,5 @@ Actor.main(async () => {
         },
     });
 
-    await crawler.run(startRequests);
-});
+        await crawler.run(startRequests);
+    });
