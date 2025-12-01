@@ -1,0 +1,9 @@
+{
+	"id": "pdTI9kc8k3gkqBg",
+	"json": "{\"id\":\"pdTI9kc8k3gkqBg\",\"url\":\"https://stubbsaustin.com/tm-event/gospel-brunch-2025-11-30/\",\"loadedUrl\":\"https://stubbsaustin.com/tm-event/gospel-brunch-2025-11-30/\",\"uniqueKey\":\"https://stubbsaustin.com/tm-event/gospel-brunch-2025-11-30\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":1,\"errorMessages\":[\"Error: Detected a session error, rotating session... \\npage.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://stubbsaustin.com/tm-event/gospel-brunch-2025-11-30/\\nCall log:\\n\\u001b[2m  - navigating to \\\"https://stubbsaustin.com/tm-event/gospel-brunch-2025-11-30/\\\", waiting until \\\"load\\\"\\u001b[22m\\n\\n\\n    at PlaywrightCrawler._throwIfProxyError (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:369:19)\\n    at PlaywrightCrawler._handleNavigation (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:339:18)\\n    at async PlaywrightCrawler._runRequestHandler (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:260:13)\\n    at async PlaywrightCrawler._runRequestHandler (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/playwright/internals/playwright-crawler.js:114:9)\\n    at async wrap (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@apify/timeout/cjs/index.cjs:54:21)\"],\"headers\":{},\"userData\":{\"venueId\":\"stubbsAustin\",\"parserId\":\"stubbsAustinEvent\",\"calendarDateText\":null,\"calendarTitle\":\"Gospel Brunch\",\"__crawlee\":{\"state\":4,\"sessionRotationCount\":1}},\"handledAt\":\"2025-11-26T14:19:06.761Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 1,
+	"uniqueKey": "https://stubbsaustin.com/tm-event/gospel-brunch-2025-11-30",
+	"url": "https://stubbsaustin.com/tm-event/gospel-brunch-2025-11-30/"
+}

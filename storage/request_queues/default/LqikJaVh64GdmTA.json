@@ -1,0 +1,9 @@
+{
+	"id": "LqikJaVh64GdmTA",
+	"json": "{\"id\":\"LqikJaVh64GdmTA\",\"url\":\"https://empireatx.com/events/the-bouncing-souls-east-coast-fck-you-tour/\",\"loadedUrl\":\"https://empireatx.com/events/the-bouncing-souls-east-coast-fck-you-tour/\",\"uniqueKey\":\"https://empireatx.com/events/the-bouncing-souls-east-coast-fck-you-tour\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Heard Presents: The Bouncing Souls – EAST COAST! F#CK YOU! TOUR w/ H2O, Dave Hause & The Mermaid and The Mercy Union in the Garage\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:53.627Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/the-bouncing-souls-east-coast-fck-you-tour",
+	"url": "https://empireatx.com/events/the-bouncing-souls-east-coast-fck-you-tour/"
+}

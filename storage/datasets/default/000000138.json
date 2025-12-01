@@ -1,0 +1,9 @@
+{
+	"venueId": "empireAtAustin",
+	"venueParserId": "empireAtAustinEvent",
+	"sourceUrl": "https://empireatx.com/events/satsang/",
+	"eventDateRaw": null,
+	"scrapedAt": "2025-11-26T14:19:29.816Z",
+	"role": "headliner",
+	"artistName": "Satsang"
+}

@@ -1,54 +1,57 @@
 {
-  "requestsFinished": 0,
-  "requestsFailed": 9,
-  "requestsRetries": 9,
-  "requestsFailedPerMinute": 40,
-  "requestsFinishedPerMinute": 0,
-  "requestMinDurationMillis": null,
-  "requestMaxDurationMillis": 0,
-  "requestTotalFailedDurationMillis": 1895,
-  "requestTotalFinishedDurationMillis": 0,
-  "crawlerStartedAt": "2025-11-24T08:49:10.183Z",
-  "crawlerFinishedAt": "2025-11-24T08:49:23.571Z",
-  "statsPersistedAt": "2025-11-24T08:49:23.571Z",
-  "crawlerRuntimeMillis": 13460,
-  "crawlerLastStartTimestamp": 1763974150111,
+  "requestsFinished": 69,
+  "requestsFailed": 0,
+  "requestsRetries": 5,
+  "requestsFailedPerMinute": 0,
+  "requestsFinishedPerMinute": 9,
+  "requestMinDurationMillis": 939,
+  "requestMaxDurationMillis": 84157,
+  "requestTotalFailedDurationMillis": 0,
+  "requestTotalFinishedDurationMillis": 687489,
+  "crawlerStartedAt": "2025-11-26T14:12:32.947Z",
+  "crawlerFinishedAt": "2025-11-26T14:20:34.867Z",
+  "statsPersistedAt": "2025-11-26T14:20:34.867Z",
+  "crawlerRuntimeMillis": 481995,
+  "crawlerLastStartTimestamp": 1764166352872,
   "requestRetryHistogram": [
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    9
+    64,
+    4,
+    1
   ],
   "statsId": 0,
-  "requestAvgFailedDurationMillis": 211,
-  "requestAvgFinishedDurationMillis": null,
-  "requestTotalDurationMillis": 1895,
-  "requestsTotal": 9,
-  "requestsWithStatusCode": {},
-  "errors": {
-    "/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:369:19": {
+  "requestAvgFailedDurationMillis": null,
+  "requestAvgFinishedDurationMillis": 9964,
+  "requestTotalDurationMillis": 687489,
+  "requestsTotal": 69,
+  "requestsWithStatusCode": {
+    "200": 69,
+    "429": 2
+  },
+  "errors": {},
+  "retryErrors": {
+    "/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/core/crawlers/crawler_utils.js:13:11": {
       "missing error code": {
         "Error": {
-          "Detected a session error, rotating session... ": {
-            "count": 9
+          "Navigation timed out after 90 seconds.": {
+            "count": 3
           }
         }
       }
-    }
-  },
-  "retryErrors": {
+    },
     "/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:369:19": {
       "missing error code": {
         "Error": {
           "Detected a session error, rotating session... ": {
-            "count": 90
+            "count": 1
+          }
+        }
+      }
+    },
+    "/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/basic/internals/basic-crawler.js:903:19": {
+      "missing error code": {
+        "Error": {
+          "Request blocked - received 429 status code.": {
+            "count": 2
           }
         }
       }

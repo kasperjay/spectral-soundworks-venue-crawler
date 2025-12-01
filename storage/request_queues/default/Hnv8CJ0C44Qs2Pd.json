@@ -1,0 +1,9 @@
+{
+	"id": "Hnv8CJ0C44Qs2Pd",
+	"json": "{\"id\":\"Hnv8CJ0C44Qs2Pd\",\"url\":\"https://empireatx.com/events/the-aces-gold-star-baby-tour/\",\"loadedUrl\":\"https://empireatx.com/events/the-aces-gold-star-baby-tour/\",\"uniqueKey\":\"https://empireatx.com/events/the-aces-gold-star-baby-tour\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":1,\"errorMessages\":[\"Error: Request blocked - received 429 status code.\\n    at PlaywrightCrawler._throwOnBlockedRequest (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/basic/internals/basic-crawler.js:903:19)\\n    at PlaywrightCrawler._responseHandler (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:383:22)\\n    at PlaywrightCrawler._runRequestHandler (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:262:24)\\n    at runNextTicks (node:internal/process/task_queues:64:5)\\n    at process.processImmediate (node:internal/timers:472:9)\\n    at async PlaywrightCrawler._runRequestHandler (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/playwright/internals/playwright-crawler.js:114:9)\\n    at async wrap (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@apify/timeout/cjs/index.cjs:54:21)\"],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Live Nation Presents: The Aces – Gold Star Baby Tour w/ Lydia Night in the Garage\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:20:33.400Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 1,
+	"uniqueKey": "https://empireatx.com/events/the-aces-gold-star-baby-tour",
+	"url": "https://empireatx.com/events/the-aces-gold-star-baby-tour/"
+}

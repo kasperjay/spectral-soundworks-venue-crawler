@@ -1,0 +1,9 @@
+{
+	"id": "hY71Tmwe61Qus3Z",
+	"json": "{\"id\":\"hY71Tmwe61Qus3Z\",\"url\":\"https://empireatx.com/events/thurtdelic-friends/\",\"loadedUrl\":\"https://empireatx.com/events/thurtdelic-friends/\",\"uniqueKey\":\"https://empireatx.com/events/thurtdelic-friends\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Heard Presents: Thurtdelic & Friends Perform Psychedelic Therapy w/ Buck Rogers, Zeale & Los Lobos in the Control Room\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:32.932Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/thurtdelic-friends",
+	"url": "https://empireatx.com/events/thurtdelic-friends/"
+}

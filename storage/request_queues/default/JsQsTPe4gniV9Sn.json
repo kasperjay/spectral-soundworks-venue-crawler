@@ -1,0 +1,9 @@
+{
+	"id": "JsQsTPe4gniV9Sn",
+	"json": "{\"id\":\"JsQsTPe4gniV9Sn\",\"url\":\"https://empireatx.com/events/underground-springhouse/\",\"loadedUrl\":\"https://empireatx.com/events/underground-springhouse/\",\"uniqueKey\":\"https://empireatx.com/events/underground-springhouse\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Heard Presents: Underground Springhouse w/ Texas String Assembly at Empire Control Room\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:20:34.689Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/underground-springhouse",
+	"url": "https://empireatx.com/events/underground-springhouse/"
+}

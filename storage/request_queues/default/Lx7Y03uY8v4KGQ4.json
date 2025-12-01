@@ -1,0 +1,9 @@
+{
+	"id": "Lx7Y03uY8v4KGQ4",
+	"json": "{\"id\":\"Lx7Y03uY8v4KGQ4\",\"url\":\"https://empireatx.com/events/boltcutter/\",\"loadedUrl\":\"https://empireatx.com/events/boltcutter/\",\"uniqueKey\":\"https://empireatx.com/events/boltcutter\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"No One Presents: BOLTCUTTER w/ SnakeFather, Rasura, and Trapin Percatory at Empire Control RoomExpired\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:22.812Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/boltcutter",
+	"url": "https://empireatx.com/events/boltcutter/"
+}

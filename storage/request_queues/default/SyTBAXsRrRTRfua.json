@@ -1,0 +1,9 @@
+{
+	"id": "SyTBAXsRrRTRfua",
+	"json": "{\"id\":\"SyTBAXsRrRTRfua\",\"url\":\"https://empireatx.com/events/cortisa-star/\",\"loadedUrl\":\"https://empireatx.com/events/cortisa-star/\",\"uniqueKey\":\"https://empireatx.com/events/cortisa-star\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"moonbby Presents: Cortisa Star w/ PINK STAR & Ak_4ya at Empire Control RoomExpired\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:24.712Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/cortisa-star",
+	"url": "https://empireatx.com/events/cortisa-star/"
+}

@@ -1,0 +1,9 @@
+{
+	"id": "4vG4c45VpZJc8a8",
+	"json": "{\"id\":\"4vG4c45VpZJc8a8\",\"url\":\"https://empireatx.com/events/kyle-smith-the-chaos-vibes-tour/\",\"loadedUrl\":\"https://empireatx.com/events/kyle-smith-the-chaos-vibes-tour/\",\"uniqueKey\":\"https://empireatx.com/events/kyle-smith-the-chaos-vibes-tour\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Heard Presents: Kyle Smith – The Chaos & Vibes Tour w/ Sugar Waves in the Control RoomExpired\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:29.137Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/kyle-smith-the-chaos-vibes-tour",
+	"url": "https://empireatx.com/events/kyle-smith-the-chaos-vibes-tour/"
+}

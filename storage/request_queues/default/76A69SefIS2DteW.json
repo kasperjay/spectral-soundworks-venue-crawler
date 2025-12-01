@@ -1,0 +1,9 @@
+{
+	"id": "76A69SefIS2DteW",
+	"json": "{\"id\":\"76A69SefIS2DteW\",\"url\":\"https://empireatx.com/events/sofia-isella/\",\"loadedUrl\":\"https://empireatx.com/events/sofia-isella/\",\"uniqueKey\":\"https://empireatx.com/events/sofia-isella\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Resound & Live Nation Present: SOFIA ISELLA w/ Ayleen Valentine in the GarageExpired\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:17.995Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/sofia-isella",
+	"url": "https://empireatx.com/events/sofia-isella/"
+}

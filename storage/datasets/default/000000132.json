@@ -1,0 +1,9 @@
+{
+	"venueId": "empireAtAustin",
+	"venueParserId": "empireAtAustinEvent",
+	"sourceUrl": "https://empireatx.com/events/stop-light-observations/",
+	"eventDateRaw": null,
+	"scrapedAt": "2025-11-26T14:19:26.485Z",
+	"role": "headliner",
+	"artistName": "Stop Light Observations"
+}

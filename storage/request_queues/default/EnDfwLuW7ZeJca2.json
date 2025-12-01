@@ -1,0 +1,9 @@
+{
+	"id": "EnDfwLuW7ZeJca2",
+	"json": "{\"id\":\"EnDfwLuW7ZeJca2\",\"url\":\"https://stubbsaustin.com/tm-event/tinzo-jojo-plur-tour/\",\"loadedUrl\":\"https://stubbsaustin.com/tm-event/tinzo-jojo-plur-tour/\",\"uniqueKey\":\"https://stubbsaustin.com/tm-event/tinzo-jojo-plur-tour\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"stubbsAustin\",\"parserId\":\"stubbsAustinEvent\",\"calendarDateText\":null,\"calendarTitle\":\"Tinzo + Jojo – PLUR Tour\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:08.766Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://stubbsaustin.com/tm-event/tinzo-jojo-plur-tour",
+	"url": "https://stubbsaustin.com/tm-event/tinzo-jojo-plur-tour/"
+}

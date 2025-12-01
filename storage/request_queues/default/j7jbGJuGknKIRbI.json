@@ -1,0 +1,9 @@
+{
+	"id": "j7jbGJuGknKIRbI",
+	"json": "{\"id\":\"j7jbGJuGknKIRbI\",\"url\":\"https://stubbsaustin.com/tm-event/panchiko/\",\"loadedUrl\":\"https://stubbsaustin.com/tm-event/panchiko/\",\"uniqueKey\":\"https://stubbsaustin.com/tm-event/panchiko\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"stubbsAustin\",\"parserId\":\"stubbsAustinEvent\",\"calendarDateText\":null,\"calendarTitle\":\"Panchiko\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:18:17.499Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://stubbsaustin.com/tm-event/panchiko",
+	"url": "https://stubbsaustin.com/tm-event/panchiko/"
+}

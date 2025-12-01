@@ -1,0 +1,9 @@
+{
+	"id": "IYxcBwARiUkw0OC",
+	"json": "{\"id\":\"IYxcBwARiUkw0OC\",\"url\":\"https://empireatx.com/events/toledo-not-from-ohio-tour/\",\"loadedUrl\":\"https://empireatx.com/events/toledo-not-from-ohio-tour/\",\"uniqueKey\":\"https://empireatx.com/events/toledo-not-from-ohio-tour\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Resound Presents: TOLEDO – Not From OHIO Tour w/ fanclubwallet & Cypress  in the GarageExpired\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:30.568Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/toledo-not-from-ohio-tour",
+	"url": "https://empireatx.com/events/toledo-not-from-ohio-tour/"
+}

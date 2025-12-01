@@ -1,0 +1,9 @@
+{
+	"id": "SqnCVqFsGEcoN7O",
+	"json": "{\"id\":\"SqnCVqFsGEcoN7O\",\"url\":\"https://stubbsaustin.com/tm-event/drama/\",\"loadedUrl\":\"https://stubbsaustin.com/tm-event/drama/\",\"uniqueKey\":\"https://stubbsaustin.com/tm-event/drama\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"stubbsAustin\",\"parserId\":\"stubbsAustinEvent\",\"calendarDateText\":null,\"calendarTitle\":\"DRAMA: Platonic Romance Tour\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:18:06.963Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://stubbsaustin.com/tm-event/drama",
+	"url": "https://stubbsaustin.com/tm-event/drama/"
+}

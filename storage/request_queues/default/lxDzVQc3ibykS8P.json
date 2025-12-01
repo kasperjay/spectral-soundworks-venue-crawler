@@ -1,0 +1,9 @@
+{
+	"id": "lxDzVQc3ibykS8P",
+	"json": "{\"id\":\"lxDzVQc3ibykS8P\",\"url\":\"https://empireatx.com/events/kilbourne/\",\"loadedUrl\":\"https://empireatx.com/events/kilbourne/\",\"uniqueKey\":\"https://empireatx.com/events/kilbourne\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Directress Presents: Kilbourne w/ fromjoy, gaterror, mouthing, freakhorse & nephalem b2b directress at Empire GarageExpired\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:20.049Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/kilbourne",
+	"url": "https://empireatx.com/events/kilbourne/"
+}

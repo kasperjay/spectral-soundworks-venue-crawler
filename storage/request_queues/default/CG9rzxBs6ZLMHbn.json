@@ -1,0 +1,9 @@
+{
+	"id": "CG9rzxBs6ZLMHbn",
+	"json": "{\"id\":\"CG9rzxBs6ZLMHbn\",\"url\":\"https://empireatx.com/events/taylor-rave-a-taylor-swift-rave/\",\"loadedUrl\":\"https://empireatx.com/events/taylor-rave-a-taylor-swift-rave/\",\"uniqueKey\":\"https://empireatx.com/events/taylor-rave-a-taylor-swift-rave\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Heard Presents: Taylor Rave – A Taylor Swift Rave Halloween Edition in the GarageExpired\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:13.380Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/taylor-rave-a-taylor-swift-rave",
+	"url": "https://empireatx.com/events/taylor-rave-a-taylor-swift-rave/"
+}

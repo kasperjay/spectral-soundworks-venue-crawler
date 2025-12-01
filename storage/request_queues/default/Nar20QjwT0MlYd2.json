@@ -1,0 +1,9 @@
+{
+	"id": "Nar20QjwT0MlYd2",
+	"json": "{\"id\":\"Nar20QjwT0MlYd2\",\"url\":\"https://empireatx.com/events/daft-disko-halloween-2/\",\"loadedUrl\":\"https://empireatx.com/events/daft-disko-halloween-2/\",\"uniqueKey\":\"https://empireatx.com/events/daft-disko-halloween-2\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Orlove Presents: Daft Disko – Halloween in the Control RoomExpired\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:13.330Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/daft-disko-halloween-2",
+	"url": "https://empireatx.com/events/daft-disko-halloween-2/"
+}

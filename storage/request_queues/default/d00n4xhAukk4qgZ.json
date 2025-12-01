@@ -1,0 +1,9 @@
+{
+	"id": "d00n4xhAukk4qgZ",
+	"json": "{\"id\":\"d00n4xhAukk4qgZ\",\"url\":\"https://stubbsaustin.com/tm-event/mariah-the-scientist-hearts-sold-separately-tour/\",\"loadedUrl\":\"https://stubbsaustin.com/tm-event/mariah-the-scientist-hearts-sold-separately-tour/\",\"uniqueKey\":\"https://stubbsaustin.com/tm-event/mariah-the-scientist-hearts-sold-separately-tour\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"stubbsAustin\",\"parserId\":\"stubbsAustinEvent\",\"calendarDateText\":null,\"calendarTitle\":\"Mariah the Scientist: HEARTS SOLD SEPARATELY TOUR\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:18:14.975Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://stubbsaustin.com/tm-event/mariah-the-scientist-hearts-sold-separately-tour",
+	"url": "https://stubbsaustin.com/tm-event/mariah-the-scientist-hearts-sold-separately-tour/"
+}

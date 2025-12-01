@@ -1,0 +1,9 @@
+{
+	"id": "vX3godQOsIDpNrT",
+	"json": "{\"id\":\"vX3godQOsIDpNrT\",\"url\":\"https://empireatx.com/events/primitive-man/\",\"loadedUrl\":\"https://empireatx.com/events/primitive-man/\",\"uniqueKey\":\"https://empireatx.com/events/primitive-man\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Heard Presents: Primitive Man w/ God Is War, Buffalo Nichols & TODAY IS THE DAY in the Control Room\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:20:22.919Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/primitive-man",
+	"url": "https://empireatx.com/events/primitive-man/"
+}

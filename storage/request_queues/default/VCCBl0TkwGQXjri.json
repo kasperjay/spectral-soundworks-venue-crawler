@@ -1,0 +1,9 @@
+{
+	"id": "VCCBl0TkwGQXjri",
+	"json": "{\"id\":\"VCCBl0TkwGQXjri\",\"url\":\"https://stubbsaustin.com/tm-event/sticky-fingers-live-in-north-america/\",\"loadedUrl\":\"https://stubbsaustin.com/tm-event/sticky-fingers-live-in-north-america/\",\"uniqueKey\":\"https://stubbsaustin.com/tm-event/sticky-fingers-live-in-north-america\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"stubbsAustin\",\"parserId\":\"stubbsAustinEvent\",\"calendarDateText\":null,\"calendarTitle\":\"Sticky Fingers – Live in North America\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:18:11.213Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://stubbsaustin.com/tm-event/sticky-fingers-live-in-north-america",
+	"url": "https://stubbsaustin.com/tm-event/sticky-fingers-live-in-north-america/"
+}

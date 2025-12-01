@@ -1,0 +1,9 @@
+{
+	"id": "uG6CAYtto47lFkh",
+	"json": "{\"id\":\"uG6CAYtto47lFkh\",\"url\":\"https://empireatx.com/events/starflake/\",\"loadedUrl\":\"https://empireatx.com/events/starflake/\",\"uniqueKey\":\"https://empireatx.com/events/starflake\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":1,\"errorMessages\":[\"Error: Request blocked - received 429 status code.\\n    at PlaywrightCrawler._throwOnBlockedRequest (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/basic/internals/basic-crawler.js:903:19)\\n    at PlaywrightCrawler._responseHandler (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:383:22)\\n    at PlaywrightCrawler._runRequestHandler (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/browser/internals/browser-crawler.js:262:24)\\n    at runNextTicks (node:internal/process/task_queues:64:5)\\n    at process.processImmediate (node:internal/timers:472:9)\\n    at async PlaywrightCrawler._runRequestHandler (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@crawlee/playwright/internals/playwright-crawler.js:114:9)\\n    at async wrap (/Users/kp/repos/spectral-soundworks-venue-crawler/node_modules/@apify/timeout/cjs/index.cjs:54:21)\"],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Heard Presents: Starflake w/ Topaz & Chicoselfie in the Garage\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:20:34.789Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 1,
+	"uniqueKey": "https://empireatx.com/events/starflake",
+	"url": "https://empireatx.com/events/starflake/"
+}

@@ -1,0 +1,9 @@
+{
+	"id": "H0lvC6nRzccDz4o",
+	"json": "{\"id\":\"H0lvC6nRzccDz4o\",\"url\":\"https://empireatx.com/events/capyac/\",\"loadedUrl\":\"https://empireatx.com/events/capyac/\",\"uniqueKey\":\"https://empireatx.com/events/capyac\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Heard Presents: CAPYAC – Sobbing Ecstasy Album Release Party in the GarageExpired\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:30.957Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/capyac",
+	"url": "https://empireatx.com/events/capyac/"
+}

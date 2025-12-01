@@ -1,0 +1,9 @@
+{
+	"id": "a1faB0FhtiWaJjo",
+	"json": "{\"id\":\"a1faB0FhtiWaJjo\",\"url\":\"https://empireatx.com/events/galactic-empire/\",\"loadedUrl\":\"https://empireatx.com/events/galactic-empire/\",\"uniqueKey\":\"https://empireatx.com/events/galactic-empire\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"venueId\":\"empireAtAustin\",\"parserId\":\"empireAtAustinEvent\",\"calendarTitle\":\"Come and Take It Productions Presents: GALACTIC EMPIRE w/ A GOOD ROGERING & TEXAS MICROPHONE MASSACRE in the GarageExpired\",\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-11-26T14:19:16.253Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://empireatx.com/events/galactic-empire",
+	"url": "https://empireatx.com/events/galactic-empire/"
+}
